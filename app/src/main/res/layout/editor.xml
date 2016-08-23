@@ -12,33 +12,42 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
-        <ImageButton
-            android:id="@+id/lock_keyboard_button"
-            android:layout_width="56dp"
-            android:layout_height="56dp"
-            android:layout_centerVertical="true"
-            android:layout_alignParentStart="true"
-            android:src="@drawable/ic_lock_open_black"
-            android:background="@android:color/transparent"/>
+            <ImageButton
+                android:id="@+id/lock_keyboard_button"
+                android:layout_width="56dp"
+                android:layout_height="56dp"
+                android:src="@drawable/ic_lock_open_black"
+                android:background="@android:color/transparent"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentStart="true"/>
 
-        <ImageButton
-            android:id="@+id/run_button"
-            android:layout_width="56dp"
-            android:layout_height="56dp"
-            android:src="@drawable/ic_play_arrow_black"
-            android:background="@android:color/transparent"
-            android:layout_marginEnd="6dp"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentEnd="true"/>
+            <ImageButton
+                android:id="@+id/save_button"
+                android:layout_width="56dp"
+                android:layout_height="56dp"
+                android:src="@drawable/ic_save_black"
+                android:background="@android:color/transparent"
+                android:layout_alignParentTop="true"
+                android:layout_toStartOf="@+id/quick_run_button"
+                />
+            <ImageButton
+                android:id="@+id/run_button"
+                android:layout_width="56dp"
+                android:layout_height="56dp"
+                android:src="@drawable/ic_play_arrow_black"
+                android:background="@android:color/transparent"
+                android:layout_marginEnd="6dp"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentEnd="true"/>
 
-        <ImageButton
-            android:id="@+id/quick_run_button"
-            android:layout_width="56dp"
-            android:layout_height="56dp"
-            android:background="@android:color/transparent"
-            android:src="@drawable/ic_fast_forward_black"
-            android:layout_alignParentTop="true"
-            android:layout_toStartOf="@+id/run_button"/>
+            <ImageButton
+                android:id="@+id/quick_run_button"
+                android:layout_width="56dp"
+                android:layout_height="56dp"
+                android:background="@android:color/transparent"
+                android:src="@drawable/ic_fast_forward_black"
+                android:layout_alignParentTop="true"
+                android:layout_toStartOf="@+id/run_button"/>
         </RelativeLayout>
     </android.support.v7.widget.Toolbar>
 

@@ -22,10 +22,12 @@ public class Editor extends AppCompatActivity {
     private ImageButton mQuickRun;
 
 
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.editor);
+        setTitle("Editor");
         mEditor = (EditText) findViewById(R.id.editor);
         mKeyboardLock = (ImageButton) findViewById(R.id.lock_keyboard_button);
         mRun = (ImageButton) findViewById(R.id.run_button);
