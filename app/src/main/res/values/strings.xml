@@ -14,6 +14,7 @@
     <string name="input">,</string>
     <string name="start_loop">[</string>
     <string name="end_loop">]</string>
+    <string name="space">" "</string>
     <string name="backspace">⌫</string>
     <string name="back">←</string>
     <string name="forward">→</string>
