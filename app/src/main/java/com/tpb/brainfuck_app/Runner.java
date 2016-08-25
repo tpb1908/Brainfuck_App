@@ -10,6 +10,7 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Stack;
 
 /**
@@ -39,11 +40,21 @@ public class Runner extends AppCompatActivity implements InterpreterIO {
 
     private void startProgram() {
         program = new Program();
-        program.prog = "-,+[ -[ >>++++[>++++++++<-] <+<-[ >+>+>-[>>>] <[[>+<-]>>+>] <<<<<- ] ]>>>[-]+ >--[-[<->[-]]]<[ ++++++++++++<[ >-[>+>>] >[+[<+>-]>+>>] <<<<<- ] >>[<+>-] >[ -[ -<<[-]>> ]<<[<<->>-]>> ]<<[<<+>>-] ] <[-] <.[-] <-,+ ]";
+        //program.prog = "-,+[ -[ >>++++[>++++++++<-] <+<-[ >+>+>-[>>>] <[[>+<-]>>+>] <<<<<- ] ]>>>[-]+ >--[-[<->[-]]]<[ ++++++++++++<[ >-[>+>>] >[+[<+>-]>+>>] <<<<<- ] >>[<+>-] >[ -[ -<<[-]>> ]<<[<<->>-]>> ]<<[<<+>>-] ] <[-] <.[-] <-,+ ]";
+        program.prog = "++++++++[>++++[>++>+++>+++>+<<<<-]>+>+>->>+[<]<-]>>.>---.+++++++..+++.>>.<-.<.+++.------.--------.>>+.>++.";
         program.outputSuffix = "\n";
         inter = new Interpreter(this, program);
         thread = new Thread(inter);
         thread.start();
+    }
+
+    public void dump(View v) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                mOutput.append(inter.getDebugDump());
+            }
+        });
     }
 
     public void togglePause(View v) {
@@ -224,6 +235,36 @@ public class Runner extends AppCompatActivity implements InterpreterIO {
                     loops.add(new Loop(openings.pop(), i));
                 }
             }
+        }
+
+        public String getDebugDump() {
+            final StringBuilder builder = new StringBuilder();
+            builder.append("\n\nDebug dump:\n\n");
+            builder.append("Pointer position: ");
+            builder.append(pointer);
+            builder.append("\n");
+            int lastUsedPos = 0;
+            for(int i = 0; i < mem.length; i++) {
+                if(mem[i] != 0 || i == mem.length-1) {
+                    if(lastUsedPos < i-1) {
+                        builder.append("Indexes from ");
+                        builder.append(lastUsedPos);
+                        builder.append(" to ");
+                        builder.append(i-1);
+                        builder.append(" are empty.\n");
+                    } else {
+                        builder.append("Index ");
+                        builder.append(i);
+                        builder.append(": ");
+                        builder.append(mem[i]);
+                        builder.append("\n");
+                    }
+                    lastUsedPos = i+1;
+                }
+            }
+            Log.i(TAG, "Mem " + Arrays.toString(mem));
+            Log.i(TAG, "getDebugDump: " + builder.toString());
+            return builder.toString();
         }
 
         private class Loop {
