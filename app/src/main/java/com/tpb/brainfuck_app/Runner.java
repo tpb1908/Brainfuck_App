@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -23,6 +24,8 @@ public class Runner extends AppCompatActivity implements InterpreterIO {
 
     private TextView mOutput;
     private EditText mInput;
+    private ImageButton mPlayPauseButton;
+    private boolean paused = false;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -30,13 +33,37 @@ public class Runner extends AppCompatActivity implements InterpreterIO {
         setContentView(R.layout.runner);
         mOutput = (TextView) findViewById(R.id.output);
         mInput = (EditText) findViewById(R.id.input);
+        mPlayPauseButton = (ImageButton) findViewById(R.id.play_pause_button);
+        startProgram();
+    }
+
+    private void startProgram() {
         program = new Program();
         program.prog = "-,+[ -[ >>++++[>++++++++<-] <+<-[ >+>+>-[>>>] <[[>+<-]>>+>] <<<<<- ] ]>>>[-]+ >--[-[<->[-]]]<[ ++++++++++++<[ >-[>+>>] >[+[<+>-]>+>>] <<<<<- ] >>[<+>-] >[ -[ -<<[-]>> ]<<[<<->>-]>> ]<<[<<+>>-] ] <[-] <.[-] <-,+ ]";
         program.outputSuffix = "\n";
         inter = new Interpreter(this, program);
         thread = new Thread(inter);
         thread.start();
+    }
 
+    public void togglePause(View v) {
+        if(paused) {
+            inter.unPause();
+            mOutput.append("\nUnpaused\n");
+            mPlayPauseButton.setImageDrawable(getApplicationContext().getDrawable(R.drawable.ic_pause_black));
+        } else {
+            inter.pause();
+            mOutput.append("\nPaused\n");
+            mPlayPauseButton.setImageDrawable(getApplicationContext().getDrawable(R.drawable.ic_play_arrow_black));
+
+        }
+        paused = !paused;
+    }
+
+    public void restart(View v) {
+        thread.interrupt();
+        mOutput.setText("");
+        startProgram();
     }
 
     @Override
@@ -59,7 +86,6 @@ public class Runner extends AppCompatActivity implements InterpreterIO {
                 mOutput.append("Input: ");
             }
         });
-
     }
 
     public void input(View v) {
@@ -77,12 +103,12 @@ public class Runner extends AppCompatActivity implements InterpreterIO {
     private class Interpreter implements Runnable {
         private InterpreterIO io;
         private Program program;
-        private int stepCounter; //Rudimentary way to detect infinite loops
         private int[] mem;
         private int pos;
         private int pointer;
         private ArrayList<Loop> loops;
         private boolean waitingForInput = false;
+        private boolean paused = false;
 
         public Interpreter(InterpreterIO io, Program program) {
             this.io = io;
@@ -91,14 +117,13 @@ public class Runner extends AppCompatActivity implements InterpreterIO {
 
         @Override
         public void run() {
-            stepCounter = 0;
             mem = new int[program.defaultSize];
             pos = 0;
             pointer = 0;
             loops = new ArrayList<>();
             findLoopPositions();
             while(pos < program.prog.length()) {
-                if(waitingForInput) {
+                if(paused || waitingForInput) {
                     try {
                         Thread.sleep(100);
                     } catch(InterruptedException e) {}
@@ -150,6 +175,14 @@ public class Runner extends AppCompatActivity implements InterpreterIO {
             waitingForInput = false;
         }
 
+        public void pause() {
+            paused = true;
+        }
+
+        public void unPause() {
+            paused = false;
+        }
+
 
         public int closingPos(int left) {
             for(Loop l : loops) {
@@ -186,4 +219,7 @@ public class Runner extends AppCompatActivity implements InterpreterIO {
             }
         }
     }
+
+
+
 }
