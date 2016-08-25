@@ -28,7 +28,8 @@ public class Storage extends SQLiteOpenHelper {
     private static final String KEY_UNDERFLOW_BEHAVIOUR = "UNDERFLOW_BEHAVIOUR";
     private static final String KEY_SIZE_OVERFLOW_BEHAVIOUR = "SIZE_OVERFLOW_BEHAVIOUR";
     private static final String KEY_SIZE_UNDERFLOW_BEHAVIOUR = "SIZE_UNDERFLOW_BEHAVIOUR";
-    private static final String[] PROGRAM_COLUMNS = { KEY_ID, KEY_NAME, KEY_DESC, KEY_PROG, KEY_DEFAULT_SIZE, KEY_DEFAULT_MIN, KEY_DEFAULT_MAX, KEY_OVERFLOW_BEHAVIOUR, KEY_UNDERFLOW_BEHAVIOUR, KEY_SIZE_OVERFLOW_BEHAVIOUR, KEY_SIZE_UNDERFLOW_BEHAVIOUR };
+    private static final String KEY_OUTPUT_SUFFIX = "OUTPUT_SUFFIX";
+    private static final String[] PROGRAM_COLUMNS = { KEY_ID, KEY_NAME, KEY_DESC, KEY_PROG, KEY_DEFAULT_SIZE, KEY_DEFAULT_MIN, KEY_DEFAULT_MAX, KEY_OVERFLOW_BEHAVIOUR, KEY_UNDERFLOW_BEHAVIOUR, KEY_SIZE_OVERFLOW_BEHAVIOUR, KEY_SIZE_UNDERFLOW_BEHAVIOUR, KEY_OUTPUT_SUFFIX };
 
 
     public Storage instance(Context context) {
@@ -56,7 +57,8 @@ public class Storage extends SQLiteOpenHelper {
                 KEY_OVERFLOW_BEHAVIOUR + " BOOLEAN, " +
                 KEY_UNDERFLOW_BEHAVIOUR + " BOOLEAN, " +
                 KEY_SIZE_OVERFLOW_BEHAVIOUR + " INTEGER, " +
-                KEY_SIZE_UNDERFLOW_BEHAVIOUR + " INTEGER )";
+                KEY_SIZE_UNDERFLOW_BEHAVIOUR + " INTEGER, " +
+                KEY_OUTPUT_SUFFIX + " VARCHAR )";
         db.execSQL(CREATE_TABLE);
     }
 
@@ -78,6 +80,7 @@ public class Storage extends SQLiteOpenHelper {
         values.put(KEY_UNDERFLOW_BEHAVIOUR, program.underflowBehaviour);
         values.put(KEY_SIZE_OVERFLOW_BEHAVIOUR, program.sizeOverflowBehaviour);
         values.put(KEY_SIZE_UNDERFLOW_BEHAVIOUR, program.sizeUnderflowBehaviour);
+        values.put(KEY_OUTPUT_SUFFIX, program.outputSuffix);
         db.insert(TABLE_PROGRAMS, null, values);
     }
 
@@ -94,6 +97,7 @@ public class Storage extends SQLiteOpenHelper {
         values.put(KEY_UNDERFLOW_BEHAVIOUR, program.underflowBehaviour);
         values.put(KEY_SIZE_OVERFLOW_BEHAVIOUR, program.sizeOverflowBehaviour);
         values.put(KEY_SIZE_UNDERFLOW_BEHAVIOUR, program.sizeUnderflowBehaviour);
+        values.put(KEY_OUTPUT_SUFFIX, program.outputSuffix);
         db.update(TABLE_PROGRAMS,
                 values,
                 KEY_ID + " = " + program.id,
@@ -131,6 +135,7 @@ public class Storage extends SQLiteOpenHelper {
             prog.underflowBehaviour = cursor.getInt(8) > 0;
             prog.sizeOverflowBehaviour = cursor.getInt(9);
             prog.sizeUnderflowBehaviour = cursor.getInt(10);
+            prog.outputSuffix = cursor.getString(11);
             cursor.close();
         }
 

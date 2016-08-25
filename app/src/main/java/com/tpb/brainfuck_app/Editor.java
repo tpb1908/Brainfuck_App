@@ -1,6 +1,7 @@
 package com.tpb.brainfuck_app;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -59,6 +60,14 @@ public class Editor extends AppCompatActivity {
                 }
             }
         });
+
+        mRun.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                final Intent i = new Intent(Editor.this, Runner.class);
+                startActivity(i);
+            }
+        });
     }
 
     public void editButtonPress(View v) {
@@ -81,7 +90,7 @@ public class Editor extends AppCompatActivity {
             case R.id.output_button:
                 mEditor.getText().replace(Math.min(start, end), Math.max(start, end), ".");
                 break;
-            case R.id.input_button:
+            case R.id.input:
                 mEditor.getText().replace(Math.min(start, end), Math.max(start, end), ",");
                 break;
             case R.id.start_loop_button:

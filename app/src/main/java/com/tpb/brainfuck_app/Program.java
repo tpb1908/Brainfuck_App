@@ -9,6 +9,7 @@ public class Program {
     String desc;
     String prog;
 
+    String outputSuffix = "";
     int defaultSize = 10000; //Size of the memory array
     int defaultMax = (int)1E6; //Maximum value in a cell
     int defaultMin = 0; //Minimum value in a cell
