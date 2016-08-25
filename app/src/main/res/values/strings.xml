@@ -22,4 +22,19 @@
     <string name="down">↓</string>
     <string name="enter">↩</string>
     <string name="breakpoint">\\</string>
+
+
+    <string name="program_name_hint">Program name</string>
+    <string name="program_description_hint">Program description</string>
+    <string name="program_output_suffix_hint">A string to add to output</string>
+    <string name="program_mem_size_hint">Memory size. Default 10000</string>
+    <string name="program_max_hint">Maximum value of values in memory</string>
+    <string name="program_min_hint">Minimum value of values in memory</string>
+    <string name="program_overflow_hint">Wrap on overflow</string>
+    <string name="program_underflow_hint">Wrap on underflow</string>
+    <string name="program_size_over_error_hint">Error on memory overflow</string>
+    <string name="program_size_over_wrap_hint">Wrap counter on memory overflow</string>
+    <string name="program_size_over_expand_hint">Expand memory on overflow</string>
+    <string name="program_size_under_error_hint">Error on memory underflow</string>
+    <string name="program_size_under_wrap_hint">Wrap counter on memory underflow</string>
 </resources>

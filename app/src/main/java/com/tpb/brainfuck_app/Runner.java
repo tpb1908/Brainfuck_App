@@ -3,14 +3,12 @@ package com.tpb.brainfuck_app;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Stack;
 
 /**
@@ -19,14 +17,13 @@ import java.util.Stack;
 public class Runner extends AppCompatActivity implements InterpreterIO {
     private static final String TAG =  "Runner";
     private Program program;
-
     private Thread thread;
     private Interpreter inter;
+    private boolean paused = false;
 
     private TextView mOutput;
     private EditText mInput;
     private ImageButton mPlayPauseButton;
-    private boolean paused = false;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -35,13 +32,14 @@ public class Runner extends AppCompatActivity implements InterpreterIO {
         mOutput = (TextView) findViewById(R.id.output);
         mInput = (EditText) findViewById(R.id.input);
         mPlayPauseButton = (ImageButton) findViewById(R.id.play_pause_button);
+        program = getIntent().getParcelableExtra("prog");
+        if(program.name != null && program.name.length() > 0) {
+            setTitle(program.name);
+        }
         startProgram();
     }
 
     private void startProgram() {
-        program = new Program();
-        //program.prog = "-,+[ -[ >>++++[>++++++++<-] <+<-[ >+>+>-[>>>] <[[>+<-]>>+>] <<<<<- ] ]>>>[-]+ >--[-[<->[-]]]<[ ++++++++++++<[ >-[>+>>] >[+[<+>-]>+>>] <<<<<- ] >>[<+>-] >[ -[ -<<[-]>> ]<<[<<->>-]>> ]<<[<<+>>-] ] <[-] <.[-] <-,+ ]";
-        program.prog = "++++++++[>++++[>++>+++>+++>+<<<<-]>+>+>->>+[<]<-]>>.>---.+++++++..+++.>>.<-.<.+++.------.--------.>>+.>++.";
         program.outputSuffix = "\n";
         inter = new Interpreter(this, program);
         thread = new Thread(inter);
@@ -61,12 +59,11 @@ public class Runner extends AppCompatActivity implements InterpreterIO {
         if(paused) {
             inter.unPause();
             mOutput.append("\nUnpaused\n");
-            mPlayPauseButton.setImageDrawable(getApplicationContext().getDrawable(R.drawable.ic_pause_black));
+            mPlayPauseButton.setImageDrawable(getApplicationContext().getResources().getDrawable(R.drawable.ic_pause_black));
         } else {
             inter.pause();
             mOutput.append("\nPaused\n");
-            mPlayPauseButton.setImageDrawable(getApplicationContext().getDrawable(R.drawable.ic_play_arrow_black));
-
+            mPlayPauseButton.setImageDrawable(getApplicationContext().getResources().getDrawable(R.drawable.ic_play_arrow_black));
         }
         paused = !paused;
     }
@@ -77,7 +74,7 @@ public class Runner extends AppCompatActivity implements InterpreterIO {
             @Override
             public void run() {
                 paused = true;
-                mPlayPauseButton.setImageDrawable(getApplicationContext().getDrawable(R.drawable.ic_play_arrow_black));
+                mPlayPauseButton.setImageDrawable(getApplicationContext().getResources().getDrawable(R.drawable.ic_play_arrow_black));
                 mOutput.append("Hit breakpoint");
             }
         });
@@ -92,7 +89,6 @@ public class Runner extends AppCompatActivity implements InterpreterIO {
 
     @Override
     public void output(final char out) {
-        Log.i(TAG, "output: " + out);
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -158,7 +154,6 @@ public class Runner extends AppCompatActivity implements InterpreterIO {
         }
 
         private void step() {
-            Log.i(TAG, "step: " + pos + " at " + program.prog.charAt(pos));
             switch(program.prog.charAt(pos)) {
                 case '>':
                     pointer++;
@@ -199,8 +194,10 @@ public class Runner extends AppCompatActivity implements InterpreterIO {
         }
 
         public void setInput(char in) {
-            mem[pointer] = in;
-            waitingForInput = false;
+            if(waitingForInput) {
+                mem[pointer] = in;
+                waitingForInput = false;
+            }
         }
 
         public void pause() {
@@ -262,8 +259,6 @@ public class Runner extends AppCompatActivity implements InterpreterIO {
                     lastUsedPos = i+1;
                 }
             }
-            Log.i(TAG, "Mem " + Arrays.toString(mem));
-            Log.i(TAG, "getDebugDump: " + builder.toString());
             return builder.toString();
         }
 
@@ -277,7 +272,5 @@ public class Runner extends AppCompatActivity implements InterpreterIO {
             }
         }
     }
-
-
 
 }

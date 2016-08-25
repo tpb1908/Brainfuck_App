@@ -1,5 +1,6 @@
 package com.tpb.brainfuck_app;
 
+import android.app.DialogFragment;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -64,10 +65,19 @@ public class Editor extends AppCompatActivity {
         mRun.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                final Program program = new Program();
+                program.prog = mEditor.getText().toString();
                 final Intent i = new Intent(Editor.this, Runner.class);
+                i.putExtra("prog", program);
                 startActivity(i);
             }
         });
+
+        final DialogFragment d = new SettingsDialog();
+        final Bundle bundle = new Bundle();
+        bundle.putParcelable("prog", new Program());
+        d.setArguments(bundle);
+        d.show(getFragmentManager(), "Show");
     }
 
     public void editButtonPress(View v) {
