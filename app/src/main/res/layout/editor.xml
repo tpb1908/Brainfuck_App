@@ -48,6 +48,7 @@
                 android:src="@drawable/ic_fast_forward_black"
                 android:layout_alignParentTop="true"
                 android:layout_toStartOf="@+id/run_button"/>
+
         </RelativeLayout>
     </android.support.v7.widget.Toolbar>
 
@@ -170,6 +171,12 @@
                 android:text="@string/enter"
                 android:id="@+id/enter_button"
                 android:layout_column="6"
+                android:onClick="editButtonPress"/>
+            <Button
+                style="?android:attr/buttonStyleSmall"
+                android:text="@string/breakpoint"
+                android:id="@+id/breakpoint_button"
+                android:layout_column="7"
                 android:onClick="editButtonPress"/>
 
         </TableRow>

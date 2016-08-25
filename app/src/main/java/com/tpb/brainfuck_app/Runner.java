@@ -60,6 +60,19 @@ public class Runner extends AppCompatActivity implements InterpreterIO {
         paused = !paused;
     }
 
+    @Override
+    public void breakpoint() {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                paused = true;
+                mPlayPauseButton.setImageDrawable(getApplicationContext().getDrawable(R.drawable.ic_play_arrow_black));
+                mOutput.append("Hit breakpoint");
+            }
+        });
+
+    }
+
     public void restart(View v) {
         thread.interrupt();
         mOutput.setText("");
@@ -166,6 +179,10 @@ public class Runner extends AppCompatActivity implements InterpreterIO {
                         pos = openingPos(pos);
                     }
                     break;
+                case '\\':
+                    paused = true;
+                    io.breakpoint();
+                    break;
             }
             pos++;
         }
@@ -184,21 +201,21 @@ public class Runner extends AppCompatActivity implements InterpreterIO {
         }
 
 
-        public int closingPos(int left) {
+        private int closingPos(int left) {
             for(Loop l : loops) {
                 if(l.left == left) return l.right;
             }
             return -1;
         }
 
-        public int openingPos(int right) {
+        private int openingPos(int right) {
             for(Loop l : loops) {
                 if(l.right == right) return l.left;
             }
             return -1;
         }
 
-        public void findLoopPositions() {
+        private void findLoopPositions() {
             final Stack<Integer> openings = new Stack<>();
             for(int i = 0; i < program.prog.length(); i++) {
                 if(program.prog.charAt(i) == '[') {

@@ -9,4 +9,6 @@ public interface InterpreterIO {
 
     void input();
 
+    void breakpoint();
+
 }

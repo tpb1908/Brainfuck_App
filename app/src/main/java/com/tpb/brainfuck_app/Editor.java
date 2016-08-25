@@ -102,6 +102,10 @@ public class Editor extends AppCompatActivity {
             case R.id.space_button:
                 mEditor.getText().replace(Math.min(start, end), Math.max(start, end), " ");
                 break;
+            case R.id.breakpoint_button:
+                mEditor.dispatchKeyEvent(new KeyEvent(0,0, KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_BACKSLASH, 0));
+                mEditor.dispatchKeyEvent(new KeyEvent(0, 0, KeyEvent.ACTION_UP, KeyEvent.KEYCODE_BACKSLASH, 0));
+                break;
             case R.id.backspace_button:
                 mEditor.dispatchKeyEvent(new KeyEvent(0,0, KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_DEL, 0));
                 mEditor.dispatchKeyEvent(new KeyEvent(0, 0, KeyEvent.ACTION_UP, KeyEvent.KEYCODE_DEL, 0));
