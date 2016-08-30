@@ -19,6 +19,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".Editor">
+            android:windowSoftInputMode="stateHidden"
         </activity>
         <activity android:name=".Runner">
 

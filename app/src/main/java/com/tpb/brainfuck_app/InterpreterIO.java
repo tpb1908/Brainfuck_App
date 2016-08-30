@@ -7,7 +7,7 @@ public interface InterpreterIO {
 
     void output(char out);
 
-    void input();
+    void getInput();
 
     void breakpoint();
 

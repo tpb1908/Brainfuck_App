@@ -101,4 +101,12 @@ public class SettingsDialog extends DialogFragment {
         return builder.create();
     }
 
+    public interface SettingsDialogListener {
+
+        void onNegativeClick(DialogFragment dialog);
+
+        void onPositiveClick(DialogFragment dialog, Program program);
+
+    }
+
 }

@@ -3,9 +3,13 @@ package com.tpb.brainfuck_app;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -20,6 +24,7 @@ public class Runner extends AppCompatActivity implements InterpreterIO {
     private Thread thread;
     private Interpreter inter;
     private boolean paused = false;
+    private boolean shouldReadBreakpoints = true;
 
     private TextView mOutput;
     private EditText mInput;
@@ -35,6 +40,8 @@ public class Runner extends AppCompatActivity implements InterpreterIO {
         program = getIntent().getParcelableExtra("prog");
         if(program.name != null && program.name.length() > 0) {
             setTitle(program.name);
+        } else {
+            setTitle("Runner");
         }
         startProgram();
     }
@@ -44,6 +51,23 @@ public class Runner extends AppCompatActivity implements InterpreterIO {
         inter = new Interpreter(this, program);
         thread = new Thread(inter);
         thread.start();
+        mOutput.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
+            @Override
+            public void afterTextChanged(Editable editable) {
+                final ScrollView sv = (ScrollView) findViewById(R.id.output_scrollview);
+                sv.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        sv.fullScroll(View.FOCUS_DOWN);
+                    }
+                });
+                Log.i(TAG, "afterTextChanged: Scrolling to bottom");
+            }
+        });
     }
 
     public void dump(View v) {
@@ -81,6 +105,10 @@ public class Runner extends AppCompatActivity implements InterpreterIO {
 
     }
 
+    public void step(View v) {
+        inter.step();
+    }
+
     public void restart(View v) {
         thread.interrupt();
         mOutput.setText("");
@@ -95,11 +123,10 @@ public class Runner extends AppCompatActivity implements InterpreterIO {
                 mOutput.append(out + program.outputSuffix);
             }
         });
-
     }
 
     @Override
-    public void input() {
+    public void getInput() {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -153,7 +180,7 @@ public class Runner extends AppCompatActivity implements InterpreterIO {
             }
         }
 
-        private void step() {
+        public void step() {
             switch(program.prog.charAt(pos)) {
                 case '>':
                     pointer++;
@@ -172,7 +199,7 @@ public class Runner extends AppCompatActivity implements InterpreterIO {
                     break;
                 case ',':
                     waitingForInput = true;
-                    io.input();
+                    io.getInput();
                     break;
                 case '[':
                     if(mem[pointer] == 0) {
@@ -186,8 +213,10 @@ public class Runner extends AppCompatActivity implements InterpreterIO {
                     }
                     break;
                 case '\\':
-                    paused = true;
-                    io.breakpoint();
+                    if(shouldReadBreakpoints) {
+                        paused = true;
+                        io.breakpoint();
+                    }
                     break;
             }
             pos++;

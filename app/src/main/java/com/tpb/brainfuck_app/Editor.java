@@ -16,12 +16,13 @@ import android.widget.ImageButton;
 /**
  * Created by theo on 21/08/16.
  */
-public class Editor extends AppCompatActivity {
+public class Editor extends AppCompatActivity implements SettingsDialog.SettingsDialogListener {
     private boolean isKeyboardLocked = false;
     private EditText mEditor;
     private ImageButton mKeyboardLock;
     private ImageButton mRun;
     private ImageButton mQuickRun;
+    private Program program = new Program();
 
 
 
@@ -65,7 +66,6 @@ public class Editor extends AppCompatActivity {
         mRun.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                final Program program = new Program();
                 program.prog = mEditor.getText().toString();
                 final Intent i = new Intent(Editor.this, Runner.class);
                 i.putExtra("prog", program);
@@ -78,6 +78,16 @@ public class Editor extends AppCompatActivity {
         bundle.putParcelable("prog", new Program());
         d.setArguments(bundle);
         d.show(getFragmentManager(), "Show");
+    }
+
+    @Override
+    public void onNegativeClick(DialogFragment dialog) {
+
+    }
+
+    @Override
+    public void onPositiveClick(DialogFragment dialog, Program program) {
+
     }
 
     public void editButtonPress(View v) {
