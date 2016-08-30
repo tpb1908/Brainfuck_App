@@ -5,7 +5,6 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -65,7 +64,6 @@ public class Runner extends AppCompatActivity implements InterpreterIO {
                         sv.fullScroll(View.FOCUS_DOWN);
                     }
                 });
-                Log.i(TAG, "afterTextChanged: Scrolling to bottom");
             }
         });
     }
@@ -164,7 +162,7 @@ public class Runner extends AppCompatActivity implements InterpreterIO {
 
         @Override
         public void run() {
-            mem = new int[program.defaultSize];
+            mem = new int[program.memSize];
             pos = 0;
             pointer = 0;
             loops = new ArrayList<>();
@@ -184,15 +182,52 @@ public class Runner extends AppCompatActivity implements InterpreterIO {
             switch(program.prog.charAt(pos)) {
                 case '>':
                     pointer++;
+                    if(pointer >= mem.length) {
+                        if(program.pointerOverflowBehaviour == 0) {
+
+                        } else if(program.pointerOverflowBehaviour == 1){
+                            pointer = 0;
+                        } else if(program.pointerOverflowBehaviour == 2) {
+                            final int[] newMem = new int[(int)(mem.length * 1.5)];
+                            System.arraycopy(mem, 0, newMem, 0, mem.length);
+                            mem = newMem;
+                        }
+                    }
+
                     break;
                 case '<':
                     pointer--;
+                    if(pointer < 0) {
+                        if(program.pointerUnderflowBehaviour == 0) {
+
+                        } else if(program.pointerUnderflowBehaviour == 1){
+                            pointer = mem.length - 1;
+                        }
+                    }
                     break;
                 case '+':
                     mem[pointer]++;
+                    if(mem[pointer] > program.maxValue) {
+                        if(program.valueOverflowBehaviour == 0) {
+
+                        } else if(program.valueOverflowBehaviour == 1) {
+                            mem[pointer] = program.minValue;
+                        } else if(program.valueOverflowBehaviour == 2) {
+                            mem[pointer] = program.maxValue;
+                        }
+                    }
                     break;
                 case '-':
                     mem[pointer]--;
+                    if(mem[pointer] < program.minValue) {
+                        if(program.valueUnderflowBehaviour == 0) {
+
+                        } else if(program.valueUnderflowBehaviour == 1) {
+                            mem[pointer] = program.maxValue;
+                        } else if(program.valueUnderflowBehaviour == 2) {
+                            mem[pointer] = program.minValue;
+                        }
+                    }
                     break;
                 case '.':
                     io.output((char)mem[pointer]);

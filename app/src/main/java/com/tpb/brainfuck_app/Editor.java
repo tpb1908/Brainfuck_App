@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
@@ -17,12 +18,14 @@ import android.widget.ImageButton;
  * Created by theo on 21/08/16.
  */
 public class Editor extends AppCompatActivity implements SettingsDialog.SettingsDialogListener {
+    private static final String TAG = "Editor";
     private boolean isKeyboardLocked = false;
     private EditText mEditor;
     private ImageButton mKeyboardLock;
     private ImageButton mRun;
     private ImageButton mQuickRun;
     private Program program = new Program();
+    private boolean mSettingsState = false; //TODO- Change this to a value passed to the dialog, and passed back
 
 
 
@@ -54,16 +57,29 @@ public class Editor extends AppCompatActivity implements SettingsDialog.Settings
             public void onClick(View view) {
                 isKeyboardLocked = ! isKeyboardLocked;
                 if(isKeyboardLocked) {
-                    mKeyboardLock.setImageDrawable(getApplicationContext().getDrawable(R.drawable.ic_lock_outline_black));
+                    mKeyboardLock.setImageDrawable(getApplicationContext().getResources().getDrawable(R.drawable.ic_lock_outline_black));
                     final InputMethodManager imm = (InputMethodManager) view.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
                     if(imm != null) imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
                 } else {
-                    mKeyboardLock.setImageDrawable(getApplicationContext().getDrawable(R.drawable.ic_lock_open_black));
+                    mKeyboardLock.setImageDrawable(getApplicationContext().getResources().getDrawable(R.drawable.ic_lock_open_black));
                 }
             }
         });
 
         mRun.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                program.prog = mEditor.getText().toString();
+                final DialogFragment dialog = new SettingsDialog();
+                final Bundle bundle = new Bundle();
+                bundle.putParcelable("prog", program);
+                dialog.setArguments(bundle);
+                dialog.show(getFragmentManager(), "");
+                mSettingsState = true;
+            }
+        });
+
+        mQuickRun.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 program.prog = mEditor.getText().toString();
@@ -73,11 +89,6 @@ public class Editor extends AppCompatActivity implements SettingsDialog.Settings
             }
         });
 
-        final DialogFragment d = new SettingsDialog();
-        final Bundle bundle = new Bundle();
-        bundle.putParcelable("prog", new Program());
-        d.setArguments(bundle);
-        d.show(getFragmentManager(), "Show");
     }
 
     @Override
@@ -87,7 +98,13 @@ public class Editor extends AppCompatActivity implements SettingsDialog.Settings
 
     @Override
     public void onPositiveClick(DialogFragment dialog, Program program) {
-
+        this.program = program;
+        if(mSettingsState) { //About to run
+            final Intent i = new Intent(Editor.this, Runner.class);
+            i.putExtra("prog", program);
+            startActivity(i);
+        }
+        Log.i(TAG, "onPositiveClick: "+ program.toString());
     }
 
     public void editButtonPress(View v) {

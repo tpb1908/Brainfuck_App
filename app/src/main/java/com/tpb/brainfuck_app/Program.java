@@ -13,13 +13,13 @@ public class Program implements Parcelable {
     String prog;
 
     String outputSuffix = "";
-    int defaultSize = 10000; //Size of the memory array
-    int defaultMax = (int)1E6; //Maximum value in a cell
-    int defaultMin = 0; //Minimum value in a cell
-    boolean overflowBehaviour = false; //Error on overflow, or wrap
-    boolean underflowBehaviour = false;
-    int sizeOverflowBehaviour = 0; //On memory overflow, error, wrap, expand
-    int sizeUnderflowBehaviour = 0;
+    int memSize = 10000; //Size of the memory array
+    int maxValue = (int)1E6; //Maximum value in a cell
+    int minValue = 0; //Minimum value in a cell
+    int valueOverflowBehaviour = 0; //Error on value overflow, wrap, or cap
+    int valueUnderflowBehaviour = 0;
+    int pointerOverflowBehaviour = 0; //On memory overflow, error, wrap, expand
+    int pointerUnderflowBehaviour = 0;
 
     public Program() {}
 
@@ -31,13 +31,13 @@ public class Program implements Parcelable {
         desc = in.readString();
         prog = in.readString();
         outputSuffix = in.readString();
-        defaultSize = in.readInt();
-        defaultMax = in.readInt();
-        defaultMin = in.readInt();
-        overflowBehaviour = in.readByte() != 0x00;
-        underflowBehaviour = in.readByte() != 0x00;
-        sizeOverflowBehaviour = in.readInt();
-        sizeUnderflowBehaviour = in.readInt();
+        memSize = in.readInt();
+        maxValue = in.readInt();
+        minValue = in.readInt();
+        valueOverflowBehaviour = in.readInt();
+        valueUnderflowBehaviour = in.readInt();
+        pointerOverflowBehaviour = in.readInt();
+        pointerUnderflowBehaviour = in.readInt();
     }
 
     @Override
@@ -52,13 +52,13 @@ public class Program implements Parcelable {
         dest.writeString(desc);
         dest.writeString(prog);
         dest.writeString(outputSuffix);
-        dest.writeInt(defaultSize);
-        dest.writeInt(defaultMax);
-        dest.writeInt(defaultMin);
-        dest.writeByte((byte) (overflowBehaviour ? 0x01 : 0x00));
-        dest.writeByte((byte) (underflowBehaviour ? 0x01 : 0x00));
-        dest.writeInt(sizeOverflowBehaviour);
-        dest.writeInt(sizeUnderflowBehaviour);
+        dest.writeInt(memSize);
+        dest.writeInt(maxValue);
+        dest.writeInt(minValue);
+        dest.writeInt(valueOverflowBehaviour);
+        dest.writeInt(valueUnderflowBehaviour);
+        dest.writeInt(pointerOverflowBehaviour);
+        dest.writeInt(pointerUnderflowBehaviour);
     }
 
     @SuppressWarnings("unused")
@@ -74,4 +74,21 @@ public class Program implements Parcelable {
         }
     };
 
+    @Override
+    public String toString() {
+        return "Program{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", desc='" + desc + '\'' +
+                ", prog='" + prog + '\'' +
+                ", outputSuffix='" + outputSuffix + '\'' +
+                ", memSize=" + memSize +
+                ", maxValue=" + maxValue +
+                ", minValue=" + minValue +
+                ", valueOverflowBehaviour=" + valueOverflowBehaviour +
+                ", valueUnderflowBehaviour=" + valueUnderflowBehaviour +
+                ", pointerOverflowBehaviour=" + pointerOverflowBehaviour +
+                ", pointerUnderflowBehaviour=" + pointerUnderflowBehaviour +
+                '}';
+    }
 }

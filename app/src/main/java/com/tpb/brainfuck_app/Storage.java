@@ -21,15 +21,15 @@ public class Storage extends SQLiteOpenHelper {
     private static final String KEY_NAME = "NAME";
     private static final String KEY_DESC = "DESC";
     private static final String KEY_PROG = "PROG";
-    private static final String KEY_DEFAULT_SIZE = "DEFAULT_SIZE";
-    private static final String KEY_DEFAULT_MIN = "DEFAULT_MIN";
-    private static final String KEY_DEFAULT_MAX = "DEFAULT_MAX";
-    private static final String KEY_OVERFLOW_BEHAVIOUR = "OVERFLOW_BEHAVIOUR";
-    private static final String KEY_UNDERFLOW_BEHAVIOUR = "UNDERFLOW_BEHAVIOUR";
-    private static final String KEY_SIZE_OVERFLOW_BEHAVIOUR = "SIZE_OVERFLOW_BEHAVIOUR";
-    private static final String KEY_SIZE_UNDERFLOW_BEHAVIOUR = "SIZE_UNDERFLOW_BEHAVIOUR";
+    private static final String KEY_MEM_SIZE = "MEM_SIZE";
+    private static final String KEY_MIN_VALUE = "MIN_VALUE";
+    private static final String KEY_MAX_VALUE = "MAX_VALUE";
+    private static final String KEY_VALUE_OVERFLOW_BEHAVIOUR = "VALUE_OVERFLOW_BEHAVIOUR";
+    private static final String KEY_VALUE_UNDERFLOW_BEHAVIOUR = "VALUE_UNDERFLOW_BEHAVIOUR";
+    private static final String KEY_POINTER_OVERFLOW_BEHAVIOUR = "POINTER_OVERFLOW_BEHAVIOUR";
+    private static final String KEY_POINTER_UNDERFLOW_BEHAVIOUR = "POINTER_UNDERFLOW_BEHAVIOUR";
     private static final String KEY_OUTPUT_SUFFIX = "OUTPUT_SUFFIX";
-    private static final String[] PROGRAM_COLUMNS = { KEY_ID, KEY_NAME, KEY_DESC, KEY_PROG, KEY_DEFAULT_SIZE, KEY_DEFAULT_MIN, KEY_DEFAULT_MAX, KEY_OVERFLOW_BEHAVIOUR, KEY_UNDERFLOW_BEHAVIOUR, KEY_SIZE_OVERFLOW_BEHAVIOUR, KEY_SIZE_UNDERFLOW_BEHAVIOUR, KEY_OUTPUT_SUFFIX };
+    private static final String[] PROGRAM_COLUMNS = { KEY_ID, KEY_NAME, KEY_DESC, KEY_PROG, KEY_MEM_SIZE, KEY_MIN_VALUE, KEY_MAX_VALUE, KEY_VALUE_OVERFLOW_BEHAVIOUR, KEY_VALUE_UNDERFLOW_BEHAVIOUR, KEY_POINTER_OVERFLOW_BEHAVIOUR, KEY_POINTER_UNDERFLOW_BEHAVIOUR, KEY_OUTPUT_SUFFIX };
 
 
     public Storage instance(Context context) {
@@ -51,13 +51,13 @@ public class Storage extends SQLiteOpenHelper {
                 KEY_NAME + " VARCHAR, " +
                 KEY_DESC + " VARCHAR, " +
                 KEY_PROG + " VARCHAR, " +
-                KEY_DEFAULT_SIZE + " INTEGER, " +
-                KEY_DEFAULT_MAX + " INTEGER, " +
-                KEY_DEFAULT_MIN + " INTEGER, " +
-                KEY_OVERFLOW_BEHAVIOUR + " BOOLEAN, " +
-                KEY_UNDERFLOW_BEHAVIOUR + " BOOLEAN, " +
-                KEY_SIZE_OVERFLOW_BEHAVIOUR + " INTEGER, " +
-                KEY_SIZE_UNDERFLOW_BEHAVIOUR + " INTEGER, " +
+                KEY_MEM_SIZE + " INTEGER, " +
+                KEY_MAX_VALUE + " INTEGER, " +
+                KEY_MIN_VALUE + " INTEGER, " +
+                KEY_VALUE_OVERFLOW_BEHAVIOUR + " INTEGER, " +
+                KEY_VALUE_UNDERFLOW_BEHAVIOUR + " INTEGER, " +
+                KEY_POINTER_OVERFLOW_BEHAVIOUR + " INTEGER, " +
+                KEY_POINTER_UNDERFLOW_BEHAVIOUR + " INTEGER, " +
                 KEY_OUTPUT_SUFFIX + " VARCHAR )";
         db.execSQL(CREATE_TABLE);
     }
@@ -73,13 +73,13 @@ public class Storage extends SQLiteOpenHelper {
         values.put(KEY_NAME, program.name);
         values.put(KEY_DESC, program.desc);
         values.put(KEY_PROG, program.prog);
-        values.put(KEY_DEFAULT_SIZE, program.defaultSize);
-        values.put(KEY_DEFAULT_MAX, program.defaultMax);
-        values.put(KEY_DEFAULT_MIN, program.defaultMin);
-        values.put(KEY_OVERFLOW_BEHAVIOUR, program.overflowBehaviour);
-        values.put(KEY_UNDERFLOW_BEHAVIOUR, program.underflowBehaviour);
-        values.put(KEY_SIZE_OVERFLOW_BEHAVIOUR, program.sizeOverflowBehaviour);
-        values.put(KEY_SIZE_UNDERFLOW_BEHAVIOUR, program.sizeUnderflowBehaviour);
+        values.put(KEY_MEM_SIZE, program.memSize);
+        values.put(KEY_MAX_VALUE, program.maxValue);
+        values.put(KEY_MIN_VALUE, program.minValue);
+        values.put(KEY_VALUE_OVERFLOW_BEHAVIOUR, program.valueOverflowBehaviour);
+        values.put(KEY_VALUE_UNDERFLOW_BEHAVIOUR, program.valueUnderflowBehaviour);
+        values.put(KEY_POINTER_OVERFLOW_BEHAVIOUR, program.pointerOverflowBehaviour);
+        values.put(KEY_POINTER_UNDERFLOW_BEHAVIOUR, program.pointerUnderflowBehaviour);
         values.put(KEY_OUTPUT_SUFFIX, program.outputSuffix);
         db.insert(TABLE_PROGRAMS, null, values);
     }
@@ -90,13 +90,13 @@ public class Storage extends SQLiteOpenHelper {
         values.put(KEY_NAME, program.name);
         values.put(KEY_DESC, program.desc);
         values.put(KEY_PROG, program.prog);
-        values.put(KEY_DEFAULT_SIZE, program.defaultSize);
-        values.put(KEY_DEFAULT_MAX, program.defaultMax);
-        values.put(KEY_DEFAULT_MIN, program.defaultMin);
-        values.put(KEY_OVERFLOW_BEHAVIOUR, program.overflowBehaviour);
-        values.put(KEY_UNDERFLOW_BEHAVIOUR, program.underflowBehaviour);
-        values.put(KEY_SIZE_OVERFLOW_BEHAVIOUR, program.sizeOverflowBehaviour);
-        values.put(KEY_SIZE_UNDERFLOW_BEHAVIOUR, program.sizeUnderflowBehaviour);
+        values.put(KEY_MEM_SIZE, program.memSize);
+        values.put(KEY_MAX_VALUE, program.maxValue);
+        values.put(KEY_MIN_VALUE, program.minValue);
+        values.put(KEY_VALUE_OVERFLOW_BEHAVIOUR, program.valueOverflowBehaviour);
+        values.put(KEY_VALUE_UNDERFLOW_BEHAVIOUR, program.valueUnderflowBehaviour);
+        values.put(KEY_POINTER_OVERFLOW_BEHAVIOUR, program.pointerOverflowBehaviour);
+        values.put(KEY_POINTER_UNDERFLOW_BEHAVIOUR, program.pointerUnderflowBehaviour);
         values.put(KEY_OUTPUT_SUFFIX, program.outputSuffix);
         db.update(TABLE_PROGRAMS,
                 values,
@@ -128,13 +128,13 @@ public class Storage extends SQLiteOpenHelper {
             prog.name = cursor.getString(1);
             prog.desc = cursor.getString(2);
             prog.prog = cursor.getString(3);
-            prog.defaultSize = cursor.getInt(4);
-            prog.defaultMax = cursor.getInt(5);
-            prog.defaultMin = cursor.getInt(6);
-            prog.overflowBehaviour = cursor.getInt(7) > 0;
-            prog.underflowBehaviour = cursor.getInt(8) > 0;
-            prog.sizeOverflowBehaviour = cursor.getInt(9);
-            prog.sizeUnderflowBehaviour = cursor.getInt(10);
+            prog.memSize = cursor.getInt(4);
+            prog.maxValue = cursor.getInt(5);
+            prog.minValue = cursor.getInt(6);
+            prog.valueOverflowBehaviour = cursor.getInt(7);
+            prog.valueUnderflowBehaviour = cursor.getInt(8);
+            prog.pointerOverflowBehaviour = cursor.getInt(9);
+            prog.pointerUnderflowBehaviour = cursor.getInt(10);
             prog.outputSuffix = cursor.getString(11);
             cursor.close();
         }

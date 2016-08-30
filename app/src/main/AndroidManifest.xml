@@ -22,7 +22,7 @@
             android:windowSoftInputMode="stateHidden"
         </activity>
         <activity android:name=".Runner">
-
+            android:windowSoftInputMode="stateHidden"
         </activity>
     </application>
 
