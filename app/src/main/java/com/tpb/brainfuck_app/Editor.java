@@ -25,8 +25,6 @@ public class Editor extends AppCompatActivity implements SettingsDialog.Settings
     private ImageButton mRun;
     private ImageButton mQuickRun;
     private Program program = new Program();
-    private boolean mSettingsState = false; //TODO- Change this to a value passed to the dialog, and passed back
-
 
 
     @Override
@@ -73,9 +71,9 @@ public class Editor extends AppCompatActivity implements SettingsDialog.Settings
                 final DialogFragment dialog = new SettingsDialog();
                 final Bundle bundle = new Bundle();
                 bundle.putParcelable("prog", program);
+                bundle.putSerializable("launchType", SettingsDialog.SettingsLaunchType.RUN);
                 dialog.setArguments(bundle);
                 dialog.show(getFragmentManager(), "");
-                mSettingsState = true;
             }
         });
 
@@ -92,14 +90,14 @@ public class Editor extends AppCompatActivity implements SettingsDialog.Settings
     }
 
     @Override
-    public void onNegativeClick(DialogFragment dialog) {
+    public void onNegativeClick(DialogFragment dialog, SettingsDialog.SettingsLaunchType lt) {
 
     }
 
     @Override
-    public void onPositiveClick(DialogFragment dialog, Program program) {
+    public void onPositiveClick(DialogFragment dialog, SettingsDialog.SettingsLaunchType lt,  Program program) {
         this.program = program;
-        if(mSettingsState) { //About to run
+        if(lt == SettingsDialog.SettingsLaunchType.RUN) { //About to run
             final Intent i = new Intent(Editor.this, Runner.class);
             i.putExtra("prog", program);
             startActivity(i);

@@ -20,7 +20,8 @@ import android.widget.RadioGroup;
 public class SettingsDialog extends DialogFragment {
     private static final String TAG = "SettingsDialog";
     private static SettingsDialogListener mListener;
-    private Program program;
+    private Program mProgram;
+    private SettingsLaunchType mLaunchType;
 
     @Override
     public void onAttach(Context context) {
@@ -61,13 +62,13 @@ public class SettingsDialog extends DialogFragment {
             public void onCheckedChanged(RadioGroup radioGroup, int i) {
                 switch(i) {
                     case R.id.pointer_over_error_checkbox:
-                        program.pointerOverflowBehaviour = 0;
+                        mProgram.pointerOverflowBehaviour = 0;
                         break;
                     case R.id.pointer_over_wrap_checkbox:
-                        program.pointerOverflowBehaviour = 1;
+                        mProgram.pointerOverflowBehaviour = 1;
                         break;
                     case R.id.pointer_over_expand_checkbox:
-                        program.pointerOverflowBehaviour = 2;
+                        mProgram.pointerOverflowBehaviour = 2;
                         break;
                 }
             }
@@ -77,10 +78,10 @@ public class SettingsDialog extends DialogFragment {
             public void onCheckedChanged(RadioGroup radioGroup, int i) {
                 switch(i) {
                     case R.id.pointer_under_error_checkbox:
-                        program.pointerUnderflowBehaviour = 0;
+                        mProgram.pointerUnderflowBehaviour = 0;
                         break;
                     case R.id.pointer_under_wrap_checkbox:
-                        program.pointerUnderflowBehaviour = 1;
+                        mProgram.pointerUnderflowBehaviour = 1;
                         break;
                 }
             }
@@ -90,13 +91,13 @@ public class SettingsDialog extends DialogFragment {
             public void onCheckedChanged(RadioGroup radioGroup, int i) {
                 switch(i) {
                     case R.id.value_over_error_checkbox:
-                        program.valueOverflowBehaviour = 0;
+                        mProgram.valueOverflowBehaviour = 0;
                         break;
                     case R.id.value_over_wrap_checkbox:
-                        program.valueOverflowBehaviour = 1;
+                        mProgram.valueOverflowBehaviour = 1;
                         break;
                     case R.id.value_over_cap_checkbox:
-                        program.valueOverflowBehaviour = 2;
+                        mProgram.valueOverflowBehaviour = 2;
                         break;
 
                 }
@@ -107,39 +108,40 @@ public class SettingsDialog extends DialogFragment {
             public void onCheckedChanged(RadioGroup radioGroup, int i) {
                 switch(i) {
                     case R.id.value_under_error_checkbox:
-                        program.valueUnderflowBehaviour = 0;
+                        mProgram.valueUnderflowBehaviour = 0;
                         break;
                     case R.id.value_under_wrap_checkbox:
-                        program.valueUnderflowBehaviour = 1;
+                        mProgram.valueUnderflowBehaviour = 1;
                         break;
                     case R.id.value_under_cap_checkbox:
-                        program.valueUnderflowBehaviour = 2;
+                        mProgram.valueUnderflowBehaviour = 2;
                         break;
                 }
             }
         });
 
-        program = getArguments().getParcelable("prog");
-        if(program != null) {
+        mProgram = getArguments().getParcelable("prog");
+        mLaunchType = (SettingsLaunchType) getArguments().getSerializable("launchType");
+        if(mProgram != null) {
             Log.i(TAG, "onCreateDialog: Program is not null");
-            if(program.name != null && !program.name.isEmpty()) {
-                mNameInput.setText(program.name);
+            if(mProgram.name != null && !mProgram.name.isEmpty()) {
+                mNameInput.setText(mProgram.name);
             }
-            if(program.desc != null && !program.desc.isEmpty()) {
-                mDescInput.setText(program.desc);
+            if(mProgram.desc != null && !mProgram.desc.isEmpty()) {
+                mDescInput.setText(mProgram.desc);
             }
-            if(!program.outputSuffix.isEmpty()) {
-                mSuffixInput.setText(program.outputSuffix);
+            if(!mProgram.outputSuffix.isEmpty()) {
+                mSuffixInput.setText(mProgram.outputSuffix);
             }
-            mSizeInput.setText(Integer.toString(program.memSize));
-            mMaxInput.setText(Integer.toString(program.maxValue));
-            mMinInput.setText(Integer.toString(program.minValue));
-            ((RadioButton) mPointerOverflowGroup.getChildAt(program.valueOverflowBehaviour)).setChecked(true);
-            ((RadioButton) mPointerUnderflowGroup.getChildAt(program.valueUnderflowBehaviour)).setChecked(true);
-            ((RadioButton) mValueOverflowGroup.getChildAt(program.pointerOverflowBehaviour)).setChecked(true);
-            ((RadioButton) mValueUnderflowGroup.getChildAt(program.pointerUnderflowBehaviour)).setChecked(true);
+            mSizeInput.setText(Integer.toString(mProgram.memSize));
+            mMaxInput.setText(Integer.toString(mProgram.maxValue));
+            mMinInput.setText(Integer.toString(mProgram.minValue));
+            ((RadioButton) mPointerOverflowGroup.getChildAt(mProgram.valueOverflowBehaviour)).setChecked(true);
+            ((RadioButton) mPointerUnderflowGroup.getChildAt(mProgram.valueUnderflowBehaviour)).setChecked(true);
+            ((RadioButton) mValueOverflowGroup.getChildAt(mProgram.pointerOverflowBehaviour)).setChecked(true);
+            ((RadioButton) mValueUnderflowGroup.getChildAt(mProgram.pointerUnderflowBehaviour)).setChecked(true);
         } else {
-            program = new Program();
+            mProgram = new Program();
         }
 
         builder.setView(view);
@@ -188,13 +190,13 @@ public class SettingsDialog extends DialogFragment {
                 }
 
                 if(!error) {
-                    program.name = mNameInput.getText().toString();
-                    program.memSize = size;
-                    program.maxValue = defaultMax;
-                    program.minValue = defaultMin;
-                    program.desc = mDescInput.getText().toString();
-                    program.outputSuffix = mSuffixInput.getText().toString();
-                    mListener.onPositiveClick(SettingsDialog.this, program);
+                    mProgram.name = mNameInput.getText().toString();
+                    mProgram.memSize = size;
+                    mProgram.maxValue = defaultMax;
+                    mProgram.minValue = defaultMin;
+                    mProgram.desc = mDescInput.getText().toString();
+                    mProgram.outputSuffix = mSuffixInput.getText().toString();
+                    mListener.onPositiveClick(SettingsDialog.this, mLaunchType, mProgram);
 
                     SettingsDialog.this.getDialog().dismiss();
                 }
@@ -203,7 +205,7 @@ public class SettingsDialog extends DialogFragment {
         view.findViewById(R.id.button_cancel).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mListener.onNegativeClick(SettingsDialog.this);
+                mListener.onNegativeClick(SettingsDialog.this, mLaunchType);
                 SettingsDialog.this.getDialog().cancel();
             }
         });
@@ -213,10 +215,14 @@ public class SettingsDialog extends DialogFragment {
 
     public interface SettingsDialogListener {
 
-        void onNegativeClick(DialogFragment dialog);
+        void onNegativeClick(DialogFragment dialog, SettingsLaunchType launchType);
 
-        void onPositiveClick(DialogFragment dialog, Program program);
+        void onPositiveClick(DialogFragment dialog, SettingsLaunchType launchType, Program program);
 
+    }
+
+    public enum SettingsLaunchType {
+        SAVE, RUN
     }
 
 }
