@@ -74,6 +74,46 @@ public class Program implements Parcelable {
         }
     };
 
+    public String debugDump() {
+        String debug = "Program:" +
+                "\n-Name: " + name +
+                "\n-Description: " + desc +
+                "\n-Output suffix: " + outputSuffix +
+                "\n-Memory size: " + memSize +
+                "\n-Max value: " + maxValue +
+                "\n-Min value: " + minValue;
+        if(valueUnderflowBehaviour == 0) {
+            debug += "\n-Value overflow: Error";
+        } else if(valueUnderflowBehaviour == 1) {
+            debug += "\n-Value overflow: Wrap";
+        } else {
+            debug += "\n-Value overflow: Cap";
+        }
+        if(valueOverflowBehaviour == 0) {
+            debug += "\n-Value underflow: Error";
+        } else if(valueOverflowBehaviour == 1) {
+            debug += "\n-Value underflow: Wrap";
+        } else {
+            debug += "\n-Value underflow: Cap";
+        }
+        if(pointerOverflowBehaviour == 0) {
+            debug += "\n-Pointer overflow: Error";
+        } else if(pointerOverflowBehaviour == 1) {
+            debug += "\n-Pointer overflow: Wrap";
+        } else {
+            debug += "\n-Pointer overflow: Expand";
+        }
+        if(pointerUnderflowBehaviour == 0) {
+            debug += "\n-Pointer underflow: Error";
+        } else if(pointerUnderflowBehaviour == 1) {
+            debug += "\n-Pointer underflow: Wrap";
+        } else {
+            debug += "\n-Pointer underflow: Expand";
+        }
+
+        return debug;
+    }
+
     @Override
     public String toString() {
         return "Program{" +

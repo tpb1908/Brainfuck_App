@@ -8,6 +8,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="64dp"
+        android:elevation="4dp"
         android:background="@drawable/side_nav_bar"
         android:id="@+id/settings_header"
         android:gravity="bottom"

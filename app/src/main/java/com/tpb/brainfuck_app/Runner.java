@@ -1,10 +1,13 @@
 package com.tpb.brainfuck_app;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
+import android.text.SpannableString;
 import android.text.TextWatcher;
+import android.text.style.ForegroundColorSpan;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -46,7 +49,6 @@ public class Runner extends AppCompatActivity implements InterpreterIO {
     }
 
     private void startProgram() {
-        program.outputSuffix = "\n";
         inter = new Interpreter(this, program);
         thread = new Thread(inter);
         thread.start();
@@ -68,6 +70,45 @@ public class Runner extends AppCompatActivity implements InterpreterIO {
         });
     }
 
+    public void restart(View v) {
+        thread.interrupt();
+        mOutput.setText("");
+        startProgram();
+    }
+
+    public void togglePause(View v) {
+        if(paused) {
+            inter.unPause();
+            final SpannableString sp = new SpannableString("\nUnpaused\n");
+            sp.setSpan(new ForegroundColorSpan(Color.GREEN), 1, sp.length()-1, 0);
+            mOutput.append(sp);
+            mPlayPauseButton.setImageDrawable(getApplicationContext().getResources().getDrawable(R.drawable.ic_pause_black));
+        } else {
+            inter.pause();
+            final SpannableString sp = new SpannableString("\nPaused\n");
+            sp.setSpan(new ForegroundColorSpan(Color.YELLOW), 1, sp.length()-1, 0);
+            mOutput.append(sp);
+            mPlayPauseButton.setImageDrawable(getApplicationContext().getResources().getDrawable(R.drawable.ic_play_arrow_black));
+        }
+        paused = !paused;
+    }
+
+    public void input(View v) {
+        final String input = mInput.getText().toString();
+        if(input.length() > 0) {
+            mInput.setError(null);
+            final char in = input.charAt(0);
+            mOutput.append(in + "\n");
+            inter.setInput(in);
+        } else {
+            mInput.setError("Input a character");
+        }
+    }
+
+    public void step(View v) {
+        inter.step();
+    }
+
     public void dump(View v) {
         runOnUiThread(new Runnable() {
             @Override
@@ -75,42 +116,6 @@ public class Runner extends AppCompatActivity implements InterpreterIO {
                 mOutput.append(inter.getDebugDump());
             }
         });
-    }
-
-    public void togglePause(View v) {
-        if(paused) {
-            inter.unPause();
-            mOutput.append("\nUnpaused\n");
-            mPlayPauseButton.setImageDrawable(getApplicationContext().getResources().getDrawable(R.drawable.ic_pause_black));
-        } else {
-            inter.pause();
-            mOutput.append("\nPaused\n");
-            mPlayPauseButton.setImageDrawable(getApplicationContext().getResources().getDrawable(R.drawable.ic_play_arrow_black));
-        }
-        paused = !paused;
-    }
-
-    @Override
-    public void breakpoint() {
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                paused = true;
-                mPlayPauseButton.setImageDrawable(getApplicationContext().getResources().getDrawable(R.drawable.ic_play_arrow_black));
-                mOutput.append("Hit breakpoint");
-            }
-        });
-
-    }
-
-    public void step(View v) {
-        inter.step();
-    }
-
-    public void restart(View v) {
-        thread.interrupt();
-        mOutput.setText("");
-        startProgram();
     }
 
     @Override
@@ -124,25 +129,36 @@ public class Runner extends AppCompatActivity implements InterpreterIO {
     }
 
     @Override
+    public void breakpoint() {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                paused = true;
+                mPlayPauseButton.setImageDrawable(getApplicationContext().getResources().getDrawable(R.drawable.ic_play_arrow_black));
+                final SpannableString sp = new SpannableString("Hit breakpoint");
+                sp.setSpan(new ForegroundColorSpan(Color.YELLOW), 0, sp.length(), 0);
+                mOutput.append(sp);
+            }
+        });
+
+    }
+
+    @Override
+    public void error(int pos) {
+        String error =  "<b>There was an error at position " + pos + "</b>";
+
+    }
+
+    @Override
     public void getInput() {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                mOutput.append("Input: ");
+                final SpannableString in = new SpannableString("Input: ");
+                in.setSpan(new ForegroundColorSpan(Color.GREEN), 0, in.length(), 0);
+                mOutput.append(in);
             }
         });
-    }
-
-    public void input(View v) {
-        final String input = mInput.getText().toString();
-        if(input.length() > 0) {
-            mInput.setError(null);
-            final char in = input.charAt(0);
-            mOutput.append(in + "\n");
-            inter.setInput(in);
-        } else {
-            mInput.setError("Input a character");
-        }
     }
 
     private class Interpreter implements Runnable {
@@ -184,7 +200,8 @@ public class Runner extends AppCompatActivity implements InterpreterIO {
                     pointer++;
                     if(pointer >= mem.length) {
                         if(program.pointerOverflowBehaviour == 0) {
-
+                            pause();
+                            error(pos);
                         } else if(program.pointerOverflowBehaviour == 1){
                             pointer = 0;
                         } else if(program.pointerOverflowBehaviour == 2) {
@@ -193,13 +210,13 @@ public class Runner extends AppCompatActivity implements InterpreterIO {
                             mem = newMem;
                         }
                     }
-
                     break;
                 case '<':
                     pointer--;
                     if(pointer < 0) {
                         if(program.pointerUnderflowBehaviour == 0) {
-
+                            pause();
+                            error(pos);
                         } else if(program.pointerUnderflowBehaviour == 1){
                             pointer = mem.length - 1;
                         }
@@ -209,7 +226,8 @@ public class Runner extends AppCompatActivity implements InterpreterIO {
                     mem[pointer]++;
                     if(mem[pointer] > program.maxValue) {
                         if(program.valueOverflowBehaviour == 0) {
-
+                            pause();
+                            error(pos);
                         } else if(program.valueOverflowBehaviour == 1) {
                             mem[pointer] = program.minValue;
                         } else if(program.valueOverflowBehaviour == 2) {
@@ -221,7 +239,8 @@ public class Runner extends AppCompatActivity implements InterpreterIO {
                     mem[pointer]--;
                     if(mem[pointer] < program.minValue) {
                         if(program.valueUnderflowBehaviour == 0) {
-
+                            pause();
+                            error(pos);
                         } else if(program.valueUnderflowBehaviour == 1) {
                             mem[pointer] = program.maxValue;
                         } else if(program.valueUnderflowBehaviour == 2) {
@@ -273,6 +292,8 @@ public class Runner extends AppCompatActivity implements InterpreterIO {
         }
 
 
+        //TODO- Refactor the logic for loops
+
         private int closingPos(int left) {
             for(Loop l : loops) {
                 if(l.left == left) return l.right;
@@ -298,23 +319,29 @@ public class Runner extends AppCompatActivity implements InterpreterIO {
             }
         }
 
-        public String getDebugDump() {
+        public SpannableString getDebugDump() {
             final StringBuilder builder = new StringBuilder();
             builder.append("\n\nDebug dump:\n\n");
-            builder.append("Pointer position: ");
+            builder.append(program.debugDump());
+            builder.append("\n\nInterpreter:\n-Pointer position: ");
             builder.append(pointer);
-            builder.append("\n");
+            builder.append("\nMemory:\n");
+            if(program.pointerOverflowBehaviour == 2) {
+                builder.append("\n-Actual memory size: ");
+                builder.append(mem.length);
+                builder.append("\n");
+            }
             int lastUsedPos = 0;
             for(int i = 0; i < mem.length; i++) {
                 if(mem[i] != 0 || i == mem.length-1) {
                     if(lastUsedPos < i-1) {
-                        builder.append("Indexes from ");
+                        builder.append("-Indexes from ");
                         builder.append(lastUsedPos);
                         builder.append(" to ");
                         builder.append(i-1);
                         builder.append(" are empty.\n");
                     } else {
-                        builder.append("Index ");
+                        builder.append("-Index ");
                         builder.append(i);
                         builder.append(": ");
                         builder.append(mem[i]);
@@ -323,7 +350,9 @@ public class Runner extends AppCompatActivity implements InterpreterIO {
                     lastUsedPos = i+1;
                 }
             }
-            return builder.toString();
+            final SpannableString sp = new SpannableString(builder.toString());
+            sp.setSpan(new ForegroundColorSpan(Color.GREEN), 0, sp.length(), 0);
+            return sp;
         }
 
         private class Loop {

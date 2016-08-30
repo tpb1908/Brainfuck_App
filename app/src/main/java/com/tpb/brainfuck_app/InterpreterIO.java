@@ -9,6 +9,8 @@ public interface InterpreterIO {
 
     void getInput();
 
+    void error(int pos);
+
     void breakpoint();
 
 }
