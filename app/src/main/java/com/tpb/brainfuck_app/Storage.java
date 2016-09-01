@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 import java.util.ArrayList;
 
@@ -12,7 +13,9 @@ import java.util.ArrayList;
  * Created by theo on 21/08/16.
  */
 public class Storage extends SQLiteOpenHelper {
-    private Storage instance;
+    private static Storage instance;
+    private static final String TAG = "Storage";
+    private static long lastUpdate;
 
     private static final String DATABASE_NAME = "PROGRAMS";
     private static final int VERSION = 1;
@@ -32,9 +35,10 @@ public class Storage extends SQLiteOpenHelper {
     private static final String[] PROGRAM_COLUMNS = { KEY_ID, KEY_NAME, KEY_DESC, KEY_PROG, KEY_MEM_SIZE, KEY_MIN_VALUE, KEY_MAX_VALUE, KEY_VALUE_OVERFLOW_BEHAVIOUR, KEY_VALUE_UNDERFLOW_BEHAVIOUR, KEY_POINTER_OVERFLOW_BEHAVIOUR, KEY_POINTER_UNDERFLOW_BEHAVIOUR, KEY_OUTPUT_SUFFIX };
 
 
-    public Storage instance(Context context) {
+    public static synchronized Storage instance(Context context) {
         if(instance == null) {
             instance = new Storage(context);
+            lastUpdate = System.nanoTime();
         }
         return instance;
     }
@@ -81,7 +85,8 @@ public class Storage extends SQLiteOpenHelper {
         values.put(KEY_POINTER_OVERFLOW_BEHAVIOUR, program.pointerOverflowBehaviour);
         values.put(KEY_POINTER_UNDERFLOW_BEHAVIOUR, program.pointerUnderflowBehaviour);
         values.put(KEY_OUTPUT_SUFFIX, program.outputSuffix);
-        db.insert(TABLE_PROGRAMS, null, values);
+        program.id = db.insert(TABLE_PROGRAMS, null, values);
+        lastUpdate = System.nanoTime();
     }
 
     public void update(Program program) {
@@ -102,6 +107,7 @@ public class Storage extends SQLiteOpenHelper {
                 values,
                 KEY_ID + " = " + program.id,
                 null);
+        lastUpdate = System.nanoTime();
     }
 
     public void remove(Program program) {
@@ -109,6 +115,7 @@ public class Storage extends SQLiteOpenHelper {
         db.delete(TABLE_PROGRAMS,
                 KEY_ID + " = " + program.id,
                 null);
+        lastUpdate = System.nanoTime();
     }
 
     public Program get(int id) {
@@ -125,6 +132,7 @@ public class Storage extends SQLiteOpenHelper {
                 null);
         if(cursor != null) {
             cursor.moveToFirst();
+            prog.id = cursor.getInt(0);
             prog.name = cursor.getString(1);
             prog.desc = cursor.getString(2);
             prog.prog = cursor.getString(3);
@@ -143,7 +151,35 @@ public class Storage extends SQLiteOpenHelper {
     }
 
     public ArrayList<Program> getAll() {
-        return null;
+        final SQLiteDatabase db = this.getReadableDatabase();
+        final ArrayList<Program> programs = new ArrayList<>();
+        final String QUERY = "SELECT * FROM " + TABLE_PROGRAMS;
+        final Cursor cursor = db.rawQuery(QUERY, null);
+        if(cursor.moveToFirst()) {
+            do {
+                final Program p = new Program();
+                p.id = cursor.getInt(0);
+                p.name = cursor.getString(1);
+                p.desc = cursor.getString(2);
+                p.prog = cursor.getString(3);
+                p.memSize = cursor.getInt(4);
+                p.maxValue = cursor.getInt(5);
+                p.minValue = cursor.getInt(6);
+                p.valueOverflowBehaviour = cursor.getInt(7);
+                p.valueUnderflowBehaviour = cursor.getInt(8);
+                p.pointerOverflowBehaviour = cursor.getInt(9);
+                p.pointerUnderflowBehaviour = cursor.getInt(10);
+                p.outputSuffix = cursor.getString(11);
+                programs.add(p);
+            } while(cursor.moveToNext());
+        }
+        cursor.close();
+        return programs;
+    }
+
+    public boolean updatePerformed(long dataTime) {
+        Log.i(TAG, "updatePerformed: DataTime " + dataTime + " LastUpdate " + lastUpdate);
+        return lastUpdate > dataTime;
     }
 
 

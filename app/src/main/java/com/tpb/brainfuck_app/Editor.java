@@ -24,7 +24,9 @@ public class Editor extends AppCompatActivity implements SettingsDialog.Settings
     private ImageButton mKeyboardLock;
     private ImageButton mRun;
     private ImageButton mQuickRun;
+    private ImageButton mSaveButton;
     private Program program = new Program();
+    private Storage storage;
 
 
     @Override
@@ -32,11 +34,12 @@ public class Editor extends AppCompatActivity implements SettingsDialog.Settings
         super.onCreate(savedInstanceState);
         setContentView(R.layout.editor);
         setTitle("Editor");
+        storage = Storage.instance(this);
         mEditor = (EditText) findViewById(R.id.editor);
         mKeyboardLock = (ImageButton) findViewById(R.id.lock_keyboard_button);
         mRun = (ImageButton) findViewById(R.id.run_button);
         mQuickRun = (ImageButton) findViewById(R.id.quick_run_button);
-
+        mSaveButton = (ImageButton) findViewById(R.id.save_button);
 
         mEditor.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -87,6 +90,19 @@ public class Editor extends AppCompatActivity implements SettingsDialog.Settings
             }
         });
 
+        mSaveButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                program.prog = mEditor.getText().toString();
+                final DialogFragment dialog = new SettingsDialog();
+                final Bundle bundle = new Bundle();
+                bundle.putParcelable("prog", program);
+                bundle.putSerializable("launchType", SettingsDialog.SettingsLaunchType.SAVE);
+                dialog.setArguments(bundle);
+                dialog.show(getFragmentManager(), "");
+            }
+        });
+
     }
 
     @Override
@@ -101,8 +117,14 @@ public class Editor extends AppCompatActivity implements SettingsDialog.Settings
             final Intent i = new Intent(Editor.this, Runner.class);
             i.putExtra("prog", program);
             startActivity(i);
+        } else {
+            Log.i(TAG, "onPositiveClick: Saving program " + program);
+            if(program.id == 0) {
+                storage.add(program);
+            } else {
+                storage.update(program);
+            }
         }
-        Log.i(TAG, "onPositiveClick: "+ program.toString());
     }
 
     public void editButtonPress(View v) {

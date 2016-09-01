@@ -11,8 +11,10 @@ import android.support.design.widget.TextInputLayout;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.Button;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.TextView;
 
 /**
  * Created by theo on 23/08/16.
@@ -43,6 +45,7 @@ public class SettingsDialog extends DialogFragment {
         final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         final LayoutInflater inflater = getActivity().getLayoutInflater();
         final View view = inflater.inflate(R.layout.dialog_settings, null);
+        final TextView mTitle = (TextView) view.findViewById(R.id.settings_title);
         final TextInputLayout mNameWrapper = (TextInputLayout) view.findViewById(R.id.name_wrapper);
         final TextInputEditText mNameInput = (TextInputEditText) view.findViewById(R.id.name_input);
         final TextInputEditText mDescInput = (TextInputEditText) view.findViewById(R.id.desc_input);
@@ -56,6 +59,42 @@ public class SettingsDialog extends DialogFragment {
         final RadioGroup mPointerUnderflowGroup = (RadioGroup) view.findViewById(R.id.pointer_underflow_behaviour);
         final RadioGroup mValueOverflowGroup = (RadioGroup) view.findViewById(R.id.value_overflow_behaviour);
         final RadioGroup mValueUnderflowGroup = (RadioGroup) view.findViewById(R.id.value_underflow_behaviour);
+        final Button mOkButton = (Button) view.findViewById(R.id.button_ok);
+        final Button mCancelBUtton = (Button) view.findViewById(R.id.button_cancel);
+
+        mLaunchType = (SettingsLaunchType) getArguments().getSerializable("launchType");
+        if(mLaunchType == SettingsLaunchType.RUN) {
+            mTitle.setText("Run");
+            mOkButton.setText("Run");
+        } else {
+            mTitle.setText("Save");
+            mOkButton.setText("Save");
+        }
+
+        mProgram = getArguments().getParcelable("prog");
+        if(mProgram != null) {
+            Log.i(TAG, "onCreateDialog: Program is not null");
+            if(mProgram.name != null && !mProgram.name.isEmpty()) {
+                mNameInput.setText(mProgram.name);
+            }
+            if(mProgram.desc != null && !mProgram.desc.isEmpty()) {
+                mDescInput.setText(mProgram.desc);
+            }
+            if(!mProgram.outputSuffix.isEmpty()) {
+                mSuffixInput.setText(mProgram.outputSuffix);
+            }
+            mSizeInput.setText(Integer.toString(mProgram.memSize));
+            mMaxInput.setText(Integer.toString(mProgram.maxValue));
+            mMinInput.setText(Integer.toString(mProgram.minValue));
+            ((RadioButton) mPointerOverflowGroup.getChildAt(mProgram.valueOverflowBehaviour)).setChecked(true);
+            ((RadioButton) mPointerUnderflowGroup.getChildAt(mProgram.valueUnderflowBehaviour)).setChecked(true);
+            ((RadioButton) mValueOverflowGroup.getChildAt(mProgram.pointerOverflowBehaviour)).setChecked(true);
+            ((RadioButton) mValueUnderflowGroup.getChildAt(mProgram.pointerUnderflowBehaviour)).setChecked(true);
+        } else {
+            mProgram = new Program();
+        }
+
+        builder.setView(view);
 
         mPointerOverflowGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
@@ -120,33 +159,7 @@ public class SettingsDialog extends DialogFragment {
             }
         });
 
-        mProgram = getArguments().getParcelable("prog");
-        mLaunchType = (SettingsLaunchType) getArguments().getSerializable("launchType");
-        if(mProgram != null) {
-            Log.i(TAG, "onCreateDialog: Program is not null");
-            if(mProgram.name != null && !mProgram.name.isEmpty()) {
-                mNameInput.setText(mProgram.name);
-            }
-            if(mProgram.desc != null && !mProgram.desc.isEmpty()) {
-                mDescInput.setText(mProgram.desc);
-            }
-            if(!mProgram.outputSuffix.isEmpty()) {
-                mSuffixInput.setText(mProgram.outputSuffix);
-            }
-            mSizeInput.setText(Integer.toString(mProgram.memSize));
-            mMaxInput.setText(Integer.toString(mProgram.maxValue));
-            mMinInput.setText(Integer.toString(mProgram.minValue));
-            ((RadioButton) mPointerOverflowGroup.getChildAt(mProgram.valueOverflowBehaviour)).setChecked(true);
-            ((RadioButton) mPointerUnderflowGroup.getChildAt(mProgram.valueUnderflowBehaviour)).setChecked(true);
-            ((RadioButton) mValueOverflowGroup.getChildAt(mProgram.pointerOverflowBehaviour)).setChecked(true);
-            ((RadioButton) mValueUnderflowGroup.getChildAt(mProgram.pointerUnderflowBehaviour)).setChecked(true);
-        } else {
-            mProgram = new Program();
-        }
-
-        builder.setView(view);
-
-        view.findViewById(R.id.button_ok).setOnClickListener(new View.OnClickListener() {
+        mOkButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 boolean error = false;
@@ -202,7 +215,7 @@ public class SettingsDialog extends DialogFragment {
                 }
             }
         });
-        view.findViewById(R.id.button_cancel).setOnClickListener(new View.OnClickListener() {
+        mCancelBUtton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 mListener.onNegativeClick(SettingsDialog.this, mLaunchType);

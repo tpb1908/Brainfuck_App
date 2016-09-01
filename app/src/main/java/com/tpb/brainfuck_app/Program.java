@@ -7,7 +7,7 @@ import android.os.Parcelable;
  * Created by theo on 23/08/16.
  */
 public class Program implements Parcelable {
-    int id;
+    long id;
     String name;
     String desc;
     String prog;
@@ -47,7 +47,7 @@ public class Program implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeInt(id);
+        dest.writeLong(id);
         dest.writeString(name);
         dest.writeString(desc);
         dest.writeString(prog);
