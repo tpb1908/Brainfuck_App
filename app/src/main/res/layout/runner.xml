@@ -24,7 +24,8 @@
         android:id="@+id/input"
         android:maxLength="1"
         android:layout_below="@+id/output_scrollview"
-        android:layout_alignParentStart="true"/>
+        android:layout_alignParentStart="true"
+        android:autoText="false"/>
 
     <Button
         android:layout_width="match_parent"
@@ -33,13 +34,16 @@
         android:id="@+id/input_button"
         android:layout_below="@+id/input"
         android:layout_centerHorizontal="true"
-        android:onClick="input"/>
+        android:onClick="input"
+        android:background="@color/colorPrimary"
+        android:textColor="@color/colorText"/>
 
     <TableLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/input_button"
-        android:layout_centerHorizontal="true">
+        android:layout_centerHorizontal="true"
+        android:background="@color/colorPrimary">
 
         <TableRow
             android:layout_width="match_parent"
@@ -50,7 +54,7 @@
                 android:layout_column="0"
                 android:layout_width="56dp"
                 android:layout_height="56dp"
-                android:src="@drawable/ic_pause_black"
+                android:src="@drawable/ic_pause_white"
                 android:background="@android:color/transparent"
                 android:onClick="togglePause"/>
 
@@ -58,7 +62,7 @@
                 android:layout_width="56dp"
                 android:layout_height="56dp"
                 android:id="@+id/step_button"
-                android:src="@drawable/ic_arrow_right"
+                android:src="@drawable/ic_arrow_right_white"
                 android:background="@android:color/transparent"
                 android:layout_column="1"
                 android:onClick="step"/>
@@ -68,7 +72,7 @@
                 android:layout_column="2"
                 android:layout_width="56dp"
                 android:layout_height="56dp"
-                android:src="@drawable/ic_replay_black"
+                android:src="@drawable/ic_replay_white"
                 android:background="@android:color/transparent"
                 android:onClick="restart"/>
             <ImageButton
@@ -76,15 +80,9 @@
                 android:layout_column="3"
                 android:layout_width="56dp"
                 android:layout_height="56dp"
-                android:src="@drawable/ic_info_outline_black"
+                android:src="@drawable/ic_info_outline_white"
                 android:background="@android:color/transparent"
                 android:onClick="dump"/>
-        </TableRow>
-        <TableRow
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-
         </TableRow>
 
         <TableRow

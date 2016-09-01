@@ -13,20 +13,20 @@
         android:layout_height="wrap_content"
         android:padding="16dp">
         <TextView
+            android:id="@+id/text_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="Title"
-            android:id="@+id/text_title"
             android:layout_alignParentTop="true"
-            android:layout_alignParentStart="true"/>
+            android:layout_alignParentStart="true"
+            android:layout_toStartOf="@+id/button_quick_run"/>
 
         <TextView
+            android:id="@+id/text_desc"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/text_title"
             android:layout_toStartOf="@+id/button_quick_run"
-            android:id="@+id/text_desc"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:layout_alignStart="@+id/text_title"/>
 

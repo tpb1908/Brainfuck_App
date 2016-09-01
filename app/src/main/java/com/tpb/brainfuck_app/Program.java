@@ -8,9 +8,9 @@ import android.os.Parcelable;
  */
 public class Program implements Parcelable {
     long id;
-    String name;
-    String desc;
-    String prog;
+    String name = "";
+    String desc = "";
+    String prog = "";
 
     String outputSuffix = "";
     int memSize = 10000; //Size of the memory array

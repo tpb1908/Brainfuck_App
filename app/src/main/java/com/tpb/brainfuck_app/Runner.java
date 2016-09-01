@@ -49,6 +49,7 @@ public class Runner extends AppCompatActivity implements InterpreterIO {
             setTitle("Runner");
         }
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
         startProgram();
     }
 

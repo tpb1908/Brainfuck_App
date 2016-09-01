@@ -9,7 +9,7 @@
         android:layout_width="match_parent"
         android:layout_height="64dp"
         android:elevation="4dp"
-        android:background="@drawable/side_nav_bar"
+        android:background="@drawable/header_background"
         android:id="@+id/settings_header"
         android:gravity="bottom"
         android:orientation="vertical"

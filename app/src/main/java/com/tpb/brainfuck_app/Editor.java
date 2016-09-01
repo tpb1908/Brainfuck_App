@@ -46,15 +46,15 @@ public class Editor extends AppCompatActivity implements SettingsDialog.Settings
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
-
-        final Program p = getIntent().getExtras().getParcelable("prog");
-        if(p != null) {
-            program = p;
-            mEditor.setText(program.prog);
-            setTitle("Editing " + program.name);
-        } else {
-            program = new Program();
-            setTitle("Editor");
+        program = new Program();
+        setTitle("Editor");
+        final Bundle b = getIntent().getExtras();
+        if(b != null) {
+            program = b.getParcelable("prog");
+            if(program != null) {
+                mEditor.setText(program.prog);
+                setTitle("Editing " + program.name);
+            }
         }
 
         mEditor.setOnTouchListener(new View.OnTouchListener() {
