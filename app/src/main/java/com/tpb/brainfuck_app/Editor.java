@@ -1,13 +1,16 @@
 package com.tpb.brainfuck_app;
 
+import android.app.AlertDialog;
 import android.app.DialogFragment;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -30,10 +33,9 @@ public class Editor extends AppCompatActivity implements SettingsDialog.Settings
 
 
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
+    protected void onCreate(@Nullable final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.editor);
-        setTitle("Editor");
         storage = Storage.instance(this);
         mEditor = (EditText) findViewById(R.id.editor);
         mKeyboardLock = (ImageButton) findViewById(R.id.lock_keyboard_button);
@@ -41,12 +43,18 @@ public class Editor extends AppCompatActivity implements SettingsDialog.Settings
         mQuickRun = (ImageButton) findViewById(R.id.quick_run_button);
         mSaveButton = (ImageButton) findViewById(R.id.save_button);
 
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+
+
         final Program p = getIntent().getExtras().getParcelable("prog");
         if(p != null) {
             program = p;
             mEditor.setText(program.prog);
+            setTitle("Editing " + program.name);
         } else {
             program = new Program();
+            setTitle("Editor");
         }
 
         mEditor.setOnTouchListener(new View.OnTouchListener() {
@@ -79,12 +87,7 @@ public class Editor extends AppCompatActivity implements SettingsDialog.Settings
             @Override
             public void onClick(View view) {
                 program.prog = mEditor.getText().toString();
-                final DialogFragment dialog = new SettingsDialog();
-                final Bundle bundle = new Bundle();
-                bundle.putParcelable("prog", program);
-                bundle.putSerializable("launchType", SettingsDialog.SettingsLaunchType.RUN);
-                dialog.setArguments(bundle);
-                dialog.show(getFragmentManager(), "");
+                showDialog(SettingsDialog.SettingsLaunchType.RUN);
             }
         });
 
@@ -102,15 +105,48 @@ public class Editor extends AppCompatActivity implements SettingsDialog.Settings
             @Override
             public void onClick(View view) {
                 program.prog = mEditor.getText().toString();
-                final DialogFragment dialog = new SettingsDialog();
-                final Bundle bundle = new Bundle();
-                bundle.putParcelable("prog", program);
-                bundle.putSerializable("launchType", SettingsDialog.SettingsLaunchType.SAVE);
-                dialog.setArguments(bundle);
-                dialog.show(getFragmentManager(), "");
+                showDialog(SettingsDialog.SettingsLaunchType.SAVE);
             }
         });
 
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if(item.getItemId() == android.R.id.home) {
+            if(!program.prog.equals(mEditor.getText().toString())) {
+                final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                builder.setTitle("Confirm");
+                builder.setMessage("Save before closing?");
+                builder.setPositiveButton("YES", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        showDialog(SettingsDialog.SettingsLaunchType.CLOSE);
+                    }
+                });
+                builder.setNegativeButton("NO", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.dismiss();
+                        finish();
+                    }
+                });
+                builder.setNeutralButton("CANCEL", null);
+                builder.create().show();
+            } else {
+                finish();
+            }
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void showDialog(SettingsDialog.SettingsLaunchType lt) {
+        final DialogFragment dialog = new SettingsDialog();
+        final Bundle bundle = new Bundle();
+        bundle.putParcelable("prog", program);
+        bundle.putSerializable("launchType", lt);
+        dialog.setArguments(bundle);
+        dialog.show(getFragmentManager(), "");
     }
 
     @Override
@@ -125,13 +161,20 @@ public class Editor extends AppCompatActivity implements SettingsDialog.Settings
             final Intent i = new Intent(Editor.this, Runner.class);
             i.putExtra("prog", program);
             startActivity(i);
-        } else {
+        } else if(lt == SettingsDialog.SettingsLaunchType.SAVE){
             Log.i(TAG, "onPositiveClick: Saving program " + program);
             if(program.id == 0) {
                 storage.add(program);
             } else {
                 storage.update(program);
             }
+        } else {
+            if(program.id == 0) {
+                storage.add(program);
+            } else {
+                storage.update(program);
+            }
+            finish();
         }
     }
 

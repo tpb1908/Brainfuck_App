@@ -25,9 +25,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/text_title"
+            android:layout_toStartOf="@+id/button_quick_run"
             android:id="@+id/text_desc"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="Description"
             android:layout_alignStart="@+id/text_title"/>
 
         <ImageButton

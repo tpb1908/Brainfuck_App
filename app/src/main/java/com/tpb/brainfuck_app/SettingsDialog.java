@@ -235,7 +235,7 @@ public class SettingsDialog extends DialogFragment {
     }
 
     public enum SettingsLaunchType {
-        SAVE, RUN
+        SAVE, RUN, CLOSE
     }
 
 }
