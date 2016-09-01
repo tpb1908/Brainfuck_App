@@ -139,6 +139,14 @@ public class Main extends AppCompatActivity
             } else {
                 holder.desc.setText("No description");
             }
+            holder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    final Intent i = new Intent(Main.this, Editor.class);
+                    i.putExtra("prog", holder.program);
+                    startActivity(i);
+                }
+            });
             holder.mFastRunButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {

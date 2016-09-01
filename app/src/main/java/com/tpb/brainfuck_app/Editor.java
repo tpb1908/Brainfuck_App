@@ -25,7 +25,7 @@ public class Editor extends AppCompatActivity implements SettingsDialog.Settings
     private ImageButton mRun;
     private ImageButton mQuickRun;
     private ImageButton mSaveButton;
-    private Program program = new Program();
+    private Program program;
     private Storage storage;
 
 
@@ -40,6 +40,14 @@ public class Editor extends AppCompatActivity implements SettingsDialog.Settings
         mRun = (ImageButton) findViewById(R.id.run_button);
         mQuickRun = (ImageButton) findViewById(R.id.quick_run_button);
         mSaveButton = (ImageButton) findViewById(R.id.save_button);
+
+        final Program p = getIntent().getExtras().getParcelable("prog");
+        if(p != null) {
+            program = p;
+            mEditor.setText(program.prog);
+        } else {
+            program = new Program();
+        }
 
         mEditor.setOnTouchListener(new View.OnTouchListener() {
             @Override
