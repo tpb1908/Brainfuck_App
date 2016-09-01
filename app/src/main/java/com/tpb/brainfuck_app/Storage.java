@@ -170,6 +170,7 @@ public class Storage extends SQLiteOpenHelper {
                 p.pointerOverflowBehaviour = cursor.getInt(9);
                 p.pointerUnderflowBehaviour = cursor.getInt(10);
                 p.outputSuffix = cursor.getString(11);
+                Log.i(TAG, "getAll: " + p);
                 programs.add(p);
             } while(cursor.moveToNext());
         }

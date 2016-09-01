@@ -69,7 +69,6 @@ public class Main extends AppCompatActivity
             @Override
             public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
                 mAdapter.remove((CoordinatorLayout) Main.this.findViewById(R.id.coordinator), viewHolder.getAdapterPosition());
-
             }
         };
         ItemTouchHelper touchHelper = new ItemTouchHelper(callback);
@@ -130,9 +129,9 @@ public class Main extends AppCompatActivity
         }
 
         @Override
-        public void onBindViewHolder(ProgramViewHolder holder, int position) {
+        public void onBindViewHolder(final ProgramViewHolder holder, int position) {
             final Program p = programs.get(position);
-            Log.i(TAG, "onBindViewHolder: " + p.toString());
+            Log.i(TAG, "onBindViewHolder: " + p);
             holder.program = p;
             holder.title.setText(p.name);
             if(p.desc != null) {
@@ -140,6 +139,14 @@ public class Main extends AppCompatActivity
             } else {
                 holder.desc.setText("No description");
             }
+            holder.mFastRunButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    final Intent i = new Intent(Main.this, Runner.class);
+                    i.putExtra("prog", holder.program);
+                    startActivity(i);
+                }
+            });
         }
 
         @Override

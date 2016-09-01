@@ -23,10 +23,8 @@ public class Program implements Parcelable {
 
     public Program() {}
 
-
-
     protected Program(Parcel in) {
-        id = in.readInt();
+        id = in.readLong();
         name = in.readString();
         desc = in.readString();
         prog = in.readString();

@@ -8,7 +8,9 @@ import android.text.Editable;
 import android.text.SpannableString;
 import android.text.TextWatcher;
 import android.text.style.ForegroundColorSpan;
+import android.util.Log;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ScrollView;
@@ -40,11 +42,13 @@ public class Runner extends AppCompatActivity implements InterpreterIO {
         mInput = (EditText) findViewById(R.id.input);
         mPlayPauseButton = (ImageButton) findViewById(R.id.play_pause_button);
         program = getIntent().getParcelableExtra("prog");
+        Log.i(TAG, "onCreate: " + program);
         if(program.name != null && program.name.length() > 0) {
             setTitle(program.name);
         } else {
             setTitle("Runner");
         }
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
         startProgram();
     }
 
