@@ -18,11 +18,14 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name=".Editor">
-            android:windowSoftInputMode="stateHidden"
+        <activity android:name=".Editor"
+                  android:windowSoftInputMode="stateHidden">
+
         </activity>
-        <activity android:name=".Runner">
-            android:windowSoftInputMode="stateHidden"
+        <activity android:name=".Runner"
+                  android:windowSoftInputMode="stateHidden"
+                  android:configChanges="orientation|keyboardHidden|screenSize">
+
         </activity>
     </application>
 
