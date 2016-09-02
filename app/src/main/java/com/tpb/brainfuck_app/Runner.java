@@ -35,6 +35,7 @@ public class Runner extends AppCompatActivity implements InterpreterIO {
     private EditText mInput;
     private ImageButton mPlayPauseButton;
     private TextView mPlayPauseLabel;
+    private TextView mBreakpointLabel;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -44,6 +45,7 @@ public class Runner extends AppCompatActivity implements InterpreterIO {
         mInput = (EditText) findViewById(R.id.input);
         mPlayPauseButton = (ImageButton) findViewById(R.id.play_pause_button);
         mPlayPauseLabel = (TextView) findViewById(R.id.play_pause_label);
+        mBreakpointLabel = (TextView) findViewById(R.id.breakpoint_label);
         program = getIntent().getParcelableExtra("prog");
         Log.i(TAG, "onCreate: " + program);
         if(program.name != null && program.name.length() > 0) {
@@ -123,6 +125,16 @@ public class Runner extends AppCompatActivity implements InterpreterIO {
             mInput.setText(null);
         } else {
             mInput.setError("Input a character");
+        }
+    }
+
+    public void toggleBreak(View v) {
+        if(shouldReadBreakpoints) {
+            shouldReadBreakpoints = false;
+            mBreakpointLabel.setText("Ignore");
+        } else {
+            shouldReadBreakpoints = true;
+            mBreakpointLabel.setText("Break");
         }
     }
 
