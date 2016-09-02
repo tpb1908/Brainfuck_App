@@ -126,7 +126,7 @@ public class Runner extends AppCompatActivity implements InterpreterIO {
     }
 
     public void step(View v) {
-        if(inter.pointer < inter.program.prog.length()) inter.step();
+        if(inter.pos < inter.program.prog.length()) inter.step();
     }
 
     public void dump(View v) {

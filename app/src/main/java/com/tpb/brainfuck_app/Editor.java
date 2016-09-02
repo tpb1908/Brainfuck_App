@@ -30,7 +30,7 @@ public class Editor extends AppCompatActivity implements SettingsDialog.Settings
     private ImageButton mSaveButton;
     private Program program;
     private Storage storage;
-    private boolean saved = false;
+    private boolean saved = true;
 
 
     @Override
