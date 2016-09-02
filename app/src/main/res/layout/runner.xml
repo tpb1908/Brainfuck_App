@@ -6,7 +6,7 @@
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="350dp"
+        android:layout_height="460dp"
         android:background="@android:color/black"
         android:id="@+id/output_scrollview">
         <TextView
@@ -18,30 +18,36 @@
        />
     </ScrollView>
 
-    <EditText
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/input"
-        android:maxLength="1"
+        android:id="@+id/input_layout"
         android:layout_below="@+id/output_scrollview"
-        android:layout_alignParentStart="true"
-        android:autoText="false"/>
+        android:orientation="horizontal">
+        <EditText
+            android:layout_width="350dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/input"
+            android:layout_weight="1"
+            android:maxLength="1"/>
 
-    <Button
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Input"
-        android:id="@+id/input_button"
-        android:layout_below="@+id/input"
-        android:layout_centerHorizontal="true"
-        android:onClick="input"
-        android:background="@color/colorPrimary"
-        android:textColor="@color/colorText"/>
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="0"
+            android:text="Input"
+
+            android:id="@+id/input_button"
+            android:onClick="input"
+            />
+    </LinearLayout>
+
+
 
     <TableLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/input_button"
+        android:layout_below="@+id/input_layout"
         android:layout_centerHorizontal="true"
         android:background="@color/colorPrimary">
 

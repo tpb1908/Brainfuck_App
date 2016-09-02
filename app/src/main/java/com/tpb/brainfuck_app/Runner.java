@@ -11,6 +11,7 @@ import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ScrollView;
@@ -162,6 +163,9 @@ public class Runner extends AppCompatActivity implements InterpreterIO {
                 final SpannableString in = new SpannableString("Input: ");
                 in.setSpan(new ForegroundColorSpan(Color.GREEN), 0, in.length(), 0);
                 mOutput.append(in);
+                InputMethodManager inputMethodManager =  (InputMethodManager)getSystemService(INPUT_METHOD_SERVICE);
+                inputMethodManager.toggleSoftInputFromWindow(mInput.getApplicationWindowToken(), InputMethodManager.SHOW_FORCED, 0);
+                mInput.requestFocus();
             }
         });
     }

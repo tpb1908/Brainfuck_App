@@ -74,11 +74,11 @@ public class Editor extends AppCompatActivity implements SettingsDialog.Settings
             public void onClick(View view) {
                 isKeyboardLocked = ! isKeyboardLocked;
                 if(isKeyboardLocked) {
-                    mKeyboardLock.setImageDrawable(getApplicationContext().getResources().getDrawable(R.drawable.ic_lock_outline_black));
+                    mKeyboardLock.setImageDrawable(getApplicationContext().getResources().getDrawable(R.drawable.ic_lock_outline_white));
                     final InputMethodManager imm = (InputMethodManager) view.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
                     if(imm != null) imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
                 } else {
-                    mKeyboardLock.setImageDrawable(getApplicationContext().getResources().getDrawable(R.drawable.ic_lock_open_black));
+                    mKeyboardLock.setImageDrawable(getApplicationContext().getResources().getDrawable(R.drawable.ic_lock_open_white));
                 }
             }
         });
@@ -181,8 +181,11 @@ public class Editor extends AppCompatActivity implements SettingsDialog.Settings
     public void editButtonPress(View v) {
         final int start = Math.max(mEditor.getSelectionStart(), 0);
         final int end = Math.max(mEditor.getSelectionEnd(), 0);
+
+
         switch(v.getId()) {
-            //TODO- Replace the text replacement with key events?
+            //TODO- Find out how to do <> with key events
+
             case R.id.decrement_button:
                 mEditor.getText().replace(Math.min(start, end), Math.max(start, end), "<");
                 break;
@@ -190,25 +193,32 @@ public class Editor extends AppCompatActivity implements SettingsDialog.Settings
                 mEditor.getText().replace(Math.min(start, end), Math.max(start, end), ">");
                 break;
             case R.id.plus_button:
-                mEditor.getText().replace(Math.min(start, end), Math.max(start, end), "+");
+                mEditor.dispatchKeyEvent(new KeyEvent(0,0, KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_PLUS, 0));
+                mEditor.dispatchKeyEvent(new KeyEvent(0, 0, KeyEvent.ACTION_UP, KeyEvent.KEYCODE_PLUS, 0));
                 break;
             case R.id.minus_button:
-                mEditor.getText().replace(Math.min(start, end), Math.max(start, end), "-");
+                mEditor.dispatchKeyEvent(new KeyEvent(0,0, KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_MINUS, 0));
+                mEditor.dispatchKeyEvent(new KeyEvent(0, 0, KeyEvent.ACTION_UP, KeyEvent.KEYCODE_MINUS, 0));
                 break;
             case R.id.output_button:
-                mEditor.getText().replace(Math.min(start, end), Math.max(start, end), ".");
+                mEditor.dispatchKeyEvent(new KeyEvent(0,0, KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_PERIOD, 0));
+                mEditor.dispatchKeyEvent(new KeyEvent(0, 0, KeyEvent.ACTION_UP, KeyEvent.KEYCODE_PERIOD, 0));
                 break;
             case R.id.input:
-                mEditor.getText().replace(Math.min(start, end), Math.max(start, end), ",");
+                mEditor.dispatchKeyEvent(new KeyEvent(0,0, KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_COMMA, 0));
+                mEditor.dispatchKeyEvent(new KeyEvent(0, 0, KeyEvent.ACTION_UP, KeyEvent.KEYCODE_COMMA, 0));
                 break;
             case R.id.start_loop_button:
-                mEditor.getText().replace(Math.min(start, end), Math.max(start, end), "[");
+                mEditor.dispatchKeyEvent(new KeyEvent(0,0, KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_LEFT_BRACKET, 0));
+                mEditor.dispatchKeyEvent(new KeyEvent(0, 0, KeyEvent.ACTION_UP, KeyEvent.KEYCODE_LEFT_BRACKET, 0));
                 break;
             case R.id.end_loop_button:
-                mEditor.getText().replace(Math.min(start, end), Math.max(start, end), "]");
+                mEditor.dispatchKeyEvent(new KeyEvent(0,0, KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_RIGHT_BRACKET, 0));
+                mEditor.dispatchKeyEvent(new KeyEvent(0, 0, KeyEvent.ACTION_UP, KeyEvent.KEYCODE_RIGHT_BRACKET, 0));
                 break;
             case R.id.space_button:
-                mEditor.getText().replace(Math.min(start, end), Math.max(start, end), " ");
+                mEditor.dispatchKeyEvent(new KeyEvent(0,0, KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_SPACE, 0));
+                mEditor.dispatchKeyEvent(new KeyEvent(0, 0, KeyEvent.ACTION_UP, KeyEvent.KEYCODE_SPACE, 0));
                 break;
             case R.id.breakpoint_button:
                 mEditor.dispatchKeyEvent(new KeyEvent(0,0, KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_BACKSLASH, 0));
