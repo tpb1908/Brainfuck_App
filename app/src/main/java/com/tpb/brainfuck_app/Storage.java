@@ -40,6 +40,7 @@ public class Storage extends SQLiteOpenHelper {
             instance = new Storage(context);
             lastUpdate = System.nanoTime();
         }
+
         return instance;
     }
 
@@ -64,6 +65,7 @@ public class Storage extends SQLiteOpenHelper {
                 KEY_POINTER_UNDERFLOW_BEHAVIOUR + " INTEGER, " +
                 KEY_OUTPUT_SUFFIX + " VARCHAR )";
         db.execSQL(CREATE_TABLE);
+        restoreDefaultPrograms();
     }
 
     @Override

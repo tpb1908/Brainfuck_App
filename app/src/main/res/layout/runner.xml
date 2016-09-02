@@ -6,9 +6,10 @@
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="460dp"
+        android:layout_height="match_parent"
         android:background="@android:color/black"
-        android:id="@+id/output_scrollview">
+        android:id="@+id/output_scrollview"
+        android:layout_above="@+id/input_layout">
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -21,13 +22,14 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_above="@+id/quick_buttons"
         android:id="@+id/input_layout"
-        android:layout_below="@+id/output_scrollview"
         android:orientation="horizontal">
         <EditText
             android:layout_width="350dp"
             android:layout_height="wrap_content"
             android:id="@+id/input"
+            android:imeOptions="flagNoExtractUi"
             android:layout_weight="1"
             android:maxLength="1"/>
 
@@ -45,15 +47,16 @@
 
 
     <TableLayout
+        android:id="@+id/quick_buttons"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@+id/input_layout"
+        android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
+        android:layout_alignParentBottom="true"
         android:background="@color/colorPrimary">
 
         <TableRow
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="wrap_content">
 
             <ImageButton
                 android:id="@+id/play_pause_button"
@@ -93,7 +96,7 @@
 
         <TableRow
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="wrap_content">
 
             <TextView
                 android:textAppearance="?android:attr/textAppearanceSmall"

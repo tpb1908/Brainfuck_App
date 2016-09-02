@@ -88,13 +88,13 @@ public class Runner extends AppCompatActivity implements InterpreterIO {
             final SpannableString sp = new SpannableString("\nUnpaused\n");
             sp.setSpan(new ForegroundColorSpan(Color.GREEN), 1, sp.length()-1, 0);
             mOutput.append(sp);
-            mPlayPauseButton.setImageDrawable(getApplicationContext().getResources().getDrawable(R.drawable.ic_pause_black));
+            mPlayPauseButton.setImageDrawable(getApplicationContext().getResources().getDrawable(R.drawable.ic_pause_white));
         } else {
             inter.pause();
             final SpannableString sp = new SpannableString("\nPaused\n");
             sp.setSpan(new ForegroundColorSpan(Color.YELLOW), 1, sp.length()-1, 0);
             mOutput.append(sp);
-            mPlayPauseButton.setImageDrawable(getApplicationContext().getResources().getDrawable(R.drawable.ic_play_arrow_black));
+            mPlayPauseButton.setImageDrawable(getApplicationContext().getResources().getDrawable(R.drawable.ic_play_arrow_white));
         }
         paused = !paused;
     }
@@ -140,7 +140,7 @@ public class Runner extends AppCompatActivity implements InterpreterIO {
             @Override
             public void run() {
                 paused = true;
-                mPlayPauseButton.setImageDrawable(getApplicationContext().getResources().getDrawable(R.drawable.ic_play_arrow_black));
+                mPlayPauseButton.setImageDrawable(getApplicationContext().getResources().getDrawable(R.drawable.ic_play_arrow_white));
                 final SpannableString sp = new SpannableString("Hit breakpoint");
                 sp.setSpan(new ForegroundColorSpan(Color.YELLOW), 0, sp.length(), 0);
                 mOutput.append(sp);
