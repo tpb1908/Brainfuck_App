@@ -33,16 +33,31 @@ public class Main extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        final FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 startActivity(new Intent(Main.this, Editor.class));
             }
         });
+        if(getSharedPreferences("firstRun", MODE_PRIVATE).getBoolean("firstRun", true)) {
+            Storage.instance(this).restoreDefaultPrograms();
+            getSharedPreferences("firstRun", MODE_PRIVATE).edit().putBoolean("firstRun", false).commit();
+        }
 
 
         RecyclerView rv = (RecyclerView) findViewById(R.id.program_recycler);
+        rv.setOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                if(dy > 0 && fab.isShown()) {
+                    fab.hide();
+                } else if(dy < 0 && !fab.isShown()) {
+                    fab.show();
+                }
+            }
+
+        });
         rv.setLayoutManager(new LinearLayoutManager(this));
         mAdapter = new ProgramRecyclerAdapter(Storage.instance(this));
         rv.setAdapter(mAdapter);

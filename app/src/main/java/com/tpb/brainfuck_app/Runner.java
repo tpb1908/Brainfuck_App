@@ -120,6 +120,7 @@ public class Runner extends AppCompatActivity implements InterpreterIO {
             final char in = input.charAt(0);
             mOutput.append(in + "\n");
             inter.setInput(in);
+            mInput.setText(null);
         } else {
             mInput.setError("Input a character");
         }

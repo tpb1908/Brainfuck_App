@@ -65,7 +65,7 @@ public class Storage extends SQLiteOpenHelper {
                 KEY_POINTER_UNDERFLOW_BEHAVIOUR + " INTEGER, " +
                 KEY_OUTPUT_SUFFIX + " VARCHAR )";
         db.execSQL(CREATE_TABLE);
-        restoreDefaultPrograms();
+
     }
 
     @Override
@@ -74,7 +74,7 @@ public class Storage extends SQLiteOpenHelper {
     }
 
     public void restoreDefaultPrograms() {
-        Program p = new Program();
+        final Program p = new Program();
         p.name = "Hello word";
         p.desc = "Outputs 'Hello world'";
         p.prog = "++++++++[>++++[>++>+++>+++>+<<<<-]>+>+>->>+[<]<-]>>.>---.+++++++..+++.>>.<-.<.+++.------.--------.>>+.>++.";
@@ -108,6 +108,38 @@ public class Storage extends SQLiteOpenHelper {
                 "    >>>+[[-]++++++>>>]<<<[[<++++++++<++>>-]+<.<[>----<-]<]\n" +
                 "    <<[>>>>>[>>>[-]+++++++++<[>-<-]+++++++++>[-[<->-]+[<<<]]<[>+<-]>]<<-]<<-\n" +
                 "]";
+        add(p);
+        p.name = "ROT 13";
+        p.desc = "Shift characters by 13 places";
+        p.prog = "-,+[                         \n" +
+                "    -[                       \n" +
+                "        >>++++[>++++++++<-]  \n" +
+                "                             \n" +
+                "        <+<-[                \n" +
+                "            >+>+>-[>>>]      \n" +
+                "            <[[>+<-]>>+>]    \n" +
+                "            <<<<<-           \n" +
+                "        ]                    \n" +
+                "    ]>>>[-]+                 \n" +
+                "    >--[-[<->[-]]]<[         \n" +
+                "        ++++++++++++<[       \n" +
+                "                             \n" +
+                "            >-[>+>>]         \n" +
+                "            >[+[<+>-]>+>>]   \n" +
+                "            <<<<<-           \n" +
+                "        ]                    \n" +
+                "        >>[<+>-]             \n" +
+                "        >[                   \n" +
+                "            -[               \n" +
+                "                -<<[-]>>     \n" +
+                "            ]<<[<<->>-]>>    \n" +
+                "        ]<<[<<+>>-]          \n" +
+                "    ]                        \n" +
+                "    <[-]                     \n" +
+                "    <.[-]                    \n" +
+                "    <-,+                     \n" +
+                "]";
+        p.minValue = (int) -1E6;
         add(p);
     }
 

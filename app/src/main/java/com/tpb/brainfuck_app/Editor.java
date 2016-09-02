@@ -8,7 +8,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.MotionEvent;
@@ -30,7 +29,7 @@ public class Editor extends AppCompatActivity implements SettingsDialog.Settings
     private ImageButton mSaveButton;
     private Program program;
     private Storage storage;
-    private boolean saved = true;
+
 
 
     @Override
@@ -115,9 +114,7 @@ public class Editor extends AppCompatActivity implements SettingsDialog.Settings
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if(item.getItemId() == android.R.id.home) {
-            Log.i(TAG, "onOptionsItemSelected: Program " + program.prog);
-            Log.i(TAG, "onOptionsItemSelected: Text " + mEditor.getText().toString());
-            if(!program.prog.equals(mEditor.getText().toString()) || !saved) {
+            if(!program.prog.equals(mEditor.getText().toString()) || program.id == 0) {
                 final AlertDialog.Builder builder = new AlertDialog.Builder(this);
                 builder.setTitle("Confirm");
                 builder.setMessage("Save before closing?");
@@ -170,7 +167,6 @@ public class Editor extends AppCompatActivity implements SettingsDialog.Settings
             } else {
                 storage.update(program);
             }
-            saved = true;
             if(lt == SettingsDialog.SettingsLaunchType.CLOSE) finish();
         }
     }
@@ -178,7 +174,6 @@ public class Editor extends AppCompatActivity implements SettingsDialog.Settings
     public void editButtonPress(View v) {
         final int start = Math.max(mEditor.getSelectionStart(), 0);
         final int end = Math.max(mEditor.getSelectionEnd(), 0);
-        saved = false;
         switch(v.getId()) {
             //TODO- Find out how to do <> with key events
 
