@@ -73,6 +73,7 @@ public class Runner extends AppCompatActivity implements InterpreterIO {
                 });
             }
         });
+        mPlayPauseButton.setImageDrawable(getApplicationContext().getResources().getDrawable(R.drawable.ic_pause_white));
     }
 
     public void restart(View v) {
@@ -169,6 +170,13 @@ public class Runner extends AppCompatActivity implements InterpreterIO {
         });
     }
 
+    @Override
+    public void finish() {
+        thread.interrupt();
+        super.finish();
+
+    }
+
     private class Interpreter implements Runnable {
         private InterpreterIO io;
         private Program program;
@@ -191,13 +199,16 @@ public class Runner extends AppCompatActivity implements InterpreterIO {
             pointer = 0;
             loops = new ArrayList<>();
             findLoopPositions();
-            while(pos < program.prog.length()) {
-                if(paused || waitingForInput) {
-                    try {
-                        Thread.sleep(100);
-                    } catch(InterruptedException e) {}
-                } else {
-                    step();
+            while(!Thread.currentThread().isInterrupted()) {
+                while(pos < program.prog.length()) {
+                    if(paused || waitingForInput) {
+                        try {
+                            Thread.sleep(100);
+                        } catch(InterruptedException e) {
+                        }
+                    } else {
+                        step();
+                    }
                 }
             }
         }
