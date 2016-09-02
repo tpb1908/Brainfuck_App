@@ -94,7 +94,6 @@ public class Storage extends SQLiteOpenHelper {
                 "    >>---->>++>>+>+++++++[<++>>-<-]>>>+>>>+++++++[<+>>+++>>>>>>++++<<<<<<<-]>+\n" +
                 "    >>>>>>>>\n" +
                 "]>[<+>-]>[>>]<,[[[<<+>>-]<<-]>.[>>]<,]";
-        p.outputSuffix = "\n";
         p.memSize = 520;
         add(p);
         p.name = "Factorial";
