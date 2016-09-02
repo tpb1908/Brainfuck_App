@@ -9,7 +9,7 @@ public interface InterpreterIO {
 
     void getInput();
 
-    void error(int pos);
+    void error(int pos, String error);
 
     void breakpoint();
 

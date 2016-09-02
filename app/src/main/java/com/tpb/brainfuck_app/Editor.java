@@ -30,6 +30,7 @@ public class Editor extends AppCompatActivity implements SettingsDialog.Settings
     private ImageButton mSaveButton;
     private Program program;
     private Storage storage;
+    private boolean saved = false;
 
 
     @Override
@@ -114,7 +115,9 @@ public class Editor extends AppCompatActivity implements SettingsDialog.Settings
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if(item.getItemId() == android.R.id.home) {
-            if(!program.prog.equals(mEditor.getText().toString())) {
+            Log.i(TAG, "onOptionsItemSelected: Program " + program.prog);
+            Log.i(TAG, "onOptionsItemSelected: Text " + mEditor.getText().toString());
+            if(!program.prog.equals(mEditor.getText().toString()) || !saved) {
                 final AlertDialog.Builder builder = new AlertDialog.Builder(this);
                 builder.setTitle("Confirm");
                 builder.setMessage("Save before closing?");
@@ -161,28 +164,21 @@ public class Editor extends AppCompatActivity implements SettingsDialog.Settings
             final Intent i = new Intent(Editor.this, Runner.class);
             i.putExtra("prog", program);
             startActivity(i);
-        } else if(lt == SettingsDialog.SettingsLaunchType.SAVE){
-            Log.i(TAG, "onPositiveClick: Saving program " + program);
+        } else if(lt == SettingsDialog.SettingsLaunchType.SAVE || lt == SettingsDialog.SettingsLaunchType.CLOSE) {
             if(program.id == 0) {
                 storage.add(program);
             } else {
                 storage.update(program);
             }
-        } else {
-            if(program.id == 0) {
-                storage.add(program);
-            } else {
-                storage.update(program);
-            }
-            finish();
+            saved = true;
+            if(lt == SettingsDialog.SettingsLaunchType.CLOSE) finish();
         }
     }
 
     public void editButtonPress(View v) {
         final int start = Math.max(mEditor.getSelectionStart(), 0);
         final int end = Math.max(mEditor.getSelectionEnd(), 0);
-
-
+        saved = false;
         switch(v.getId()) {
             //TODO- Find out how to do <> with key events
 

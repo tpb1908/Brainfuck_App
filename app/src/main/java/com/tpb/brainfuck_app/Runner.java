@@ -9,6 +9,7 @@ import android.text.SpannableString;
 import android.text.TextWatcher;
 import android.text.style.ForegroundColorSpan;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
@@ -33,6 +34,7 @@ public class Runner extends AppCompatActivity implements InterpreterIO {
     private TextView mOutput;
     private EditText mInput;
     private ImageButton mPlayPauseButton;
+    private TextView mPlayPauseLabel;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -41,6 +43,7 @@ public class Runner extends AppCompatActivity implements InterpreterIO {
         mOutput = (TextView) findViewById(R.id.output);
         mInput = (EditText) findViewById(R.id.input);
         mPlayPauseButton = (ImageButton) findViewById(R.id.play_pause_button);
+        mPlayPauseLabel = (TextView) findViewById(R.id.play_pause_label);
         program = getIntent().getParcelableExtra("prog");
         Log.i(TAG, "onCreate: " + program);
         if(program.name != null && program.name.length() > 0) {
@@ -48,6 +51,8 @@ public class Runner extends AppCompatActivity implements InterpreterIO {
         } else {
             setTitle("Runner");
         }
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
         startProgram();
     }
 
@@ -74,6 +79,18 @@ public class Runner extends AppCompatActivity implements InterpreterIO {
         mPlayPauseButton.setImageDrawable(getApplicationContext().getResources().getDrawable(R.drawable.ic_pause_white));
     }
 
+    private void setPaused() {
+        mPlayPauseButton.setImageDrawable(getApplicationContext().getResources().getDrawable(R.drawable.ic_play_arrow_white));
+        mPlayPauseLabel.setText("Play");
+        paused = true;
+    }
+
+    private void setPlaying() {
+        mPlayPauseButton.setImageDrawable(getApplicationContext().getResources().getDrawable(R.drawable.ic_pause_white));
+        mPlayPauseLabel.setText("Pause");
+        paused = false;
+    }
+
     public void restart(View v) {
         thread.interrupt();
         mOutput.setText("");
@@ -86,15 +103,14 @@ public class Runner extends AppCompatActivity implements InterpreterIO {
             final SpannableString sp = new SpannableString("\nUnpaused\n");
             sp.setSpan(new ForegroundColorSpan(Color.GREEN), 1, sp.length()-1, 0);
             mOutput.append(sp);
-            mPlayPauseButton.setImageDrawable(getApplicationContext().getResources().getDrawable(R.drawable.ic_pause_white));
+            setPlaying();
         } else {
             inter.pause();
             final SpannableString sp = new SpannableString("\nPaused\n");
             sp.setSpan(new ForegroundColorSpan(Color.YELLOW), 1, sp.length()-1, 0);
             mOutput.append(sp);
-            mPlayPauseButton.setImageDrawable(getApplicationContext().getResources().getDrawable(R.drawable.ic_play_arrow_white));
+            setPaused();
         }
-        paused = !paused;
     }
 
     public void input(View v) {
@@ -110,7 +126,7 @@ public class Runner extends AppCompatActivity implements InterpreterIO {
     }
 
     public void step(View v) {
-        inter.step();
+        if(inter.pointer < inter.program.prog.length()) inter.step();
     }
 
     public void dump(View v) {
@@ -137,8 +153,7 @@ public class Runner extends AppCompatActivity implements InterpreterIO {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                paused = true;
-                mPlayPauseButton.setImageDrawable(getApplicationContext().getResources().getDrawable(R.drawable.ic_play_arrow_white));
+                setPaused();
                 final SpannableString sp = new SpannableString("Hit breakpoint");
                 sp.setSpan(new ForegroundColorSpan(Color.YELLOW), 0, sp.length(), 0);
                 mOutput.append(sp);
@@ -147,11 +162,18 @@ public class Runner extends AppCompatActivity implements InterpreterIO {
 
     }
 
-    //TODO- Implement this
     @Override
-    public void error(int pos) {
-        String error =  "<b>There was an error at position " + pos + "</b>";
-
+    public void error(final int pos, final String error) {
+        thread.interrupt();
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                final String e = "Error at position " + pos + "\nMessage: " + error;
+                final SpannableString er = new SpannableString(e);
+                er.setSpan(new ForegroundColorSpan(Color.RED),0, e.length(), 0);
+                mOutput.append(er);
+            }
+        });
     }
 
     @Override
@@ -176,6 +198,15 @@ public class Runner extends AppCompatActivity implements InterpreterIO {
 
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if(item.getItemId() == android.R.id.home) {
+            finish();
+            return true;
+        }
+        return false;
+    }
+
     private class Interpreter implements Runnable {
         private InterpreterIO io;
         private Program program;
@@ -196,28 +227,36 @@ public class Runner extends AppCompatActivity implements InterpreterIO {
             mem = new int[program.memSize];
             pos = 0;
             pointer = 0;
-            loops = new ArrayList<>();
-            findLoopPositions();
-            while(!Thread.currentThread().isInterrupted() &&  pos < program.prog.length()) {
-                if(paused || waitingForInput) {
-                    try {
-                        Thread.sleep(100);
-                    } catch(InterruptedException e) {}
-                } else {
-                    step();
+            final int sCount = program.prog.length() - program.prog.replace("[", "").length();
+            final int eCount = program.prog.length() - program.prog.replace("]", "").length();
+            if(sCount > eCount) {
+                error(-1, "Mismatched brackets, more [ than ]");
+            } else if(eCount > sCount) {
+                error(-1, "Mismatched brackets, more ] than [");
+            } else {
+                findLoopPositions();
+                while(!Thread.currentThread().isInterrupted() && pos < program.prog.length()) {
+                    if(paused || waitingForInput) {
+                        try {
+                            Thread.sleep(100);
+                        } catch(InterruptedException e) {
+                        }
+                    } else {
+                        step();
+                    }
                 }
             }
 
         }
 
-        public void step() {
+        private void step() {
             switch(program.prog.charAt(pos)) {
                 case '>':
                     pointer++;
                     if(pointer >= mem.length) {
                         if(program.pointerOverflowBehaviour == 0) {
                             pause();
-                            error(pos);
+                            error(pos, "Pointer overflow");
                         } else if(program.pointerOverflowBehaviour == 1){
                             pointer = 0;
                         } else if(program.pointerOverflowBehaviour == 2) {
@@ -232,7 +271,7 @@ public class Runner extends AppCompatActivity implements InterpreterIO {
                     if(pointer < 0) {
                         if(program.pointerUnderflowBehaviour == 0) {
                             pause();
-                            error(pos);
+                            error(pos, "Pointer underflow");
                         } else if(program.pointerUnderflowBehaviour == 1){
                             pointer = mem.length - 1;
                         }
@@ -243,7 +282,7 @@ public class Runner extends AppCompatActivity implements InterpreterIO {
                     if(mem[pointer] > program.maxValue) {
                         if(program.valueOverflowBehaviour == 0) {
                             pause();
-                            error(pos);
+                            error(pos, "Value overflow");
                         } else if(program.valueOverflowBehaviour == 1) {
                             mem[pointer] = program.minValue;
                         } else if(program.valueOverflowBehaviour == 2) {
@@ -256,7 +295,7 @@ public class Runner extends AppCompatActivity implements InterpreterIO {
                     if(mem[pointer] < program.minValue) {
                         if(program.valueUnderflowBehaviour == 0) {
                             pause();
-                            error(pos);
+                            error(pos, "Value underflow");
                         } else if(program.valueUnderflowBehaviour == 1) {
                             mem[pointer] = program.maxValue;
                         } else if(program.valueUnderflowBehaviour == 2) {
@@ -310,28 +349,39 @@ public class Runner extends AppCompatActivity implements InterpreterIO {
 
         //TODO- Refactor the logic for loops
 
-        private int closingPos(int left) {
+        private int closingPos(int start) {
             for(Loop l : loops) {
-                if(l.left == left) return l.right;
+                if(l.s == start) return l.e;
             }
             return -1;
         }
 
-        private int openingPos(int right) {
+        private int openingPos(int end) {
             for(Loop l : loops) {
-                if(l.right == right) return l.left;
+                if(l.e == end) return l.s;
             }
             return -1;
         }
 
         private void findLoopPositions() {
             final Stack<Integer> openings = new Stack<>();
+            loops = new ArrayList<>();
             for(int i = 0; i < program.prog.length(); i++) {
                 if(program.prog.charAt(i) == '[') {
                     openings.push(i);
                 } else if(program.prog.charAt(i) == ']') {
                     loops.add(new Loop(openings.pop(), i));
                 }
+            }
+        }
+
+        private class Loop {
+            int s;
+            int e;
+
+            Loop(int s, int e) {
+                this.s = s;
+                this.e = e;
             }
         }
 
@@ -371,15 +421,7 @@ public class Runner extends AppCompatActivity implements InterpreterIO {
             return sp;
         }
 
-        private class Loop {
-            int left;
-            int right;
 
-            Loop(int l, int r) {
-                left = l;
-                right = r;
-            }
-        }
     }
 
 }
