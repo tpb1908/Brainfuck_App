@@ -48,8 +48,6 @@ public class Runner extends AppCompatActivity implements InterpreterIO {
         } else {
             setTitle("Runner");
         }
-//        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
-//        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
         startProgram();
     }
 
@@ -149,6 +147,7 @@ public class Runner extends AppCompatActivity implements InterpreterIO {
 
     }
 
+    //TODO- Implement this
     @Override
     public void error(int pos) {
         String error =  "<b>There was an error at position " + pos + "</b>";
@@ -199,18 +198,16 @@ public class Runner extends AppCompatActivity implements InterpreterIO {
             pointer = 0;
             loops = new ArrayList<>();
             findLoopPositions();
-            while(!Thread.currentThread().isInterrupted()) {
-                while(pos < program.prog.length()) {
-                    if(paused || waitingForInput) {
-                        try {
-                            Thread.sleep(100);
-                        } catch(InterruptedException e) {
-                        }
-                    } else {
-                        step();
-                    }
+            while(!Thread.currentThread().isInterrupted() &&  pos < program.prog.length()) {
+                if(paused || waitingForInput) {
+                    try {
+                        Thread.sleep(100);
+                    } catch(InterruptedException e) {}
+                } else {
+                    step();
                 }
             }
+
         }
 
         public void step() {

@@ -6,7 +6,10 @@
     android:layout_height="wrap_content"
     card_view:cardCornerRadius="2dp"
     card_view:cardElevation="4dp"
-    android:layout_margin="16dp"
+    android:layout_marginLeft="16dp"
+    android:layout_marginRight="16dp"
+    android:layout_marginBottom="8dp"
+    android:layout_marginTop="8dp"
     android:padding="8dp">
     <RelativeLayout
         android:layout_width="match_parent"
