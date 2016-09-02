@@ -78,6 +78,7 @@ public class Storage extends SQLiteOpenHelper {
         p.name = "Hello word";
         p.desc = "Outputs 'Hello world'";
         p.prog = "++++++++[>++++[>++>+++>+++>+<<<<-]>+>+>->>+[<]<-]>>.>---.+++++++..+++.>>.<-.<.+++.------.--------.>>+.>++.";
+        p.memSize = 8;
         add(p);
         p.name = "QWERTY to DVORAK";
         p.desc = "Converts QWERTY keycodes to DVORAK";
@@ -93,6 +94,8 @@ public class Storage extends SQLiteOpenHelper {
                 "    >>---->>++>>+>+++++++[<++>>-<-]>>>+>>>+++++++[<+>>+++>>>>>>++++<<<<<<<-]>+\n" +
                 "    >>>>>>>>\n" +
                 "]>[<+>-]>[>>]<,[[[<<+>>-]<<-]>.[>>]<,]";
+        p.outputSuffix = "\n";
+        p.memSize = 520;
         add(p);
         p.name = "Factorial";
         p.desc = "Outputs arbitrarily many factorials";
@@ -108,6 +111,7 @@ public class Storage extends SQLiteOpenHelper {
                 "    >>>+[[-]++++++>>>]<<<[[<++++++++<++>>-]+<.<[>----<-]<]\n" +
                 "    <<[>>>>>[>>>[-]+++++++++<[>-<-]+++++++++>[-[<->-]+[<<<]]<[>+<-]>]<<-]<<-\n" +
                 "]";
+        p.memSize = 32;
         add(p);
         p.name = "ROT 13";
         p.desc = "Shift characters by 13 places";
@@ -140,6 +144,7 @@ public class Storage extends SQLiteOpenHelper {
                 "    <-,+                     \n" +
                 "]";
         p.minValue = (int) -1E6;
+        p.outputSuffix = "\n";
         add(p);
     }
 
