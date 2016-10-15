@@ -8,6 +8,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.MotionEvent;
@@ -29,6 +31,7 @@ public class Editor extends AppCompatActivity implements SettingsDialog.Settings
     private ImageButton mSaveButton;
     private Program program;
     private Storage storage;
+    private boolean editedWithoutSaving = false;
 
 
 
@@ -69,6 +72,23 @@ public class Editor extends AppCompatActivity implements SettingsDialog.Settings
             }
         });
 
+        mEditor.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                editedWithoutSaving = true;
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
+
         mKeyboardLock.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -94,7 +114,10 @@ public class Editor extends AppCompatActivity implements SettingsDialog.Settings
         mQuickRun.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                program.prog = mEditor.getText().toString();
+                if(!program.prog.equals(mEditor.getText().toString())) {
+                    program.prog = mEditor.getText().toString();
+                    editedWithoutSaving = true;
+                }
                 final Intent i = new Intent(Editor.this, Runner.class);
                 i.putExtra("prog", program);
                 startActivity(i);
@@ -114,8 +137,7 @@ public class Editor extends AppCompatActivity implements SettingsDialog.Settings
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if(item.getItemId() == android.R.id.home) {
-            if((!program.prog.equals(mEditor.getText().toString()) || program.id == 0) &&
-                    !mEditor.getText().toString().isEmpty()) {
+            if(editedWithoutSaving) {
                 final AlertDialog.Builder builder = new AlertDialog.Builder(this);
                 builder.setTitle("Confirm");
                 builder.setMessage("Save before closing?");
@@ -168,6 +190,7 @@ public class Editor extends AppCompatActivity implements SettingsDialog.Settings
             } else {
                 storage.update(program);
             }
+            editedWithoutSaving = false;
             if(lt == SettingsDialog.SettingsLaunchType.CLOSE) finish();
         }
     }
