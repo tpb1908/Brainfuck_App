@@ -28,7 +28,7 @@
         <EditText
             android:layout_width="350dp"
             android:layout_height="wrap_content"
-            android:id="@+id/input"
+            android:id="@+id/input_edittext"
             android:imeOptions="flagNoExtractUi"
             android:layout_weight="1"
             android:maxLength="1"/>

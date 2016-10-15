@@ -42,7 +42,7 @@ public class Main extends AppCompatActivity {
         });
         if(getSharedPreferences("firstRun", MODE_PRIVATE).getBoolean("firstRun", true)) {
             Storage.instance(this).restoreDefaultPrograms();
-            getSharedPreferences("firstRun", MODE_PRIVATE).edit().putBoolean("firstRun", false).commit();
+            getSharedPreferences("firstRun", MODE_PRIVATE).edit().putBoolean("firstRun", false).apply();
         }
 
 
@@ -72,8 +72,7 @@ public class Main extends AppCompatActivity {
                 mAdapter.remove((CoordinatorLayout) Main.this.findViewById(R.id.coordinator), viewHolder.getAdapterPosition());
             }
         };
-        ItemTouchHelper touchHelper = new ItemTouchHelper(callback);
-        touchHelper.attachToRecyclerView(rv);
+        new ItemTouchHelper(callback).attachToRecyclerView(rv);
     }
 
 
@@ -82,12 +81,12 @@ public class Main extends AppCompatActivity {
         private Storage storage;
         private ArrayList<Program> programs;
 
-        public ProgramRecyclerAdapter(Storage storage) {
+        ProgramRecyclerAdapter(Storage storage) {
             this.storage = storage;
             getData();
         }
 
-        public void getData() {
+        void getData() {
             if(storage.updatePerformed(lastUpdate)) {
                 programs = storage.getAll();
                 notifyDataSetChanged();
@@ -95,7 +94,7 @@ public class Main extends AppCompatActivity {
             lastUpdate = System.nanoTime();
         }
 
-        public void remove(CoordinatorLayout cl, final int pos) {
+        void remove(CoordinatorLayout cl, final int pos) {
             Log.i(TAG, "remove: " + programs.get(pos));
             final Program p = programs.get(pos);
             programs.remove(pos);
@@ -186,8 +185,6 @@ public class Main extends AppCompatActivity {
         Log.i(TAG, "onResume: ");
     }
 
-
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -207,6 +204,8 @@ public class Main extends AppCompatActivity {
             Storage.instance(this).restoreDefaultPrograms();
             mAdapter.getData();
             return true;
+        } else if(id == R.id.action_help) {
+            new HelpDialog().show(getFragmentManager(), "Help");
         }
 
         return super.onOptionsItemSelected(item);

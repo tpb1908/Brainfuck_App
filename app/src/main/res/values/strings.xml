@@ -2,6 +2,7 @@
     <string name="app_name">Brainfuck</string>
 
     <string name="action_restore">Restore programs</string>
+    <string name="action_help">Help</string>
 
     <string name="decrement"> &lt; </string>
     <string name="increment"> &gt;</string>
@@ -40,6 +41,45 @@
     <string name="program_pointer_over_expand_hint">Expand memory on overflow</string>
     <string name="program_pointer_under_error_hint">Error on pointer underflow</string>
     <string name="program_pointer_under_wrap_hint">Wrap counter on memory underflow</string>
+
+    <string name="help_text">
+        <b>Brainfuck is a language consisting of only 8 characters</b>
+        \n\n
+        Memory is in the form of an array of integers
+        \n\n
+        Single characters can be input, and are then converted to their ASCII values
+        \n
+        Output values are converted back to characters using their ASCII values
+        \n
+        The only other piece of data is the pointer, which refers to the position in
+        the array
+        \n\n
+        The command characters are as follows
+        \n
+        <b>&gt;</b> Increment the pointer
+        \n
+        <b>&lt;</b> Decrement the pointer
+        \n
+        <b>+</b> Increment the value at the pointer position in the array
+        \n
+        <b>-</b> Decrement the value at the pointer position in the array
+        \n
+        <b>.</b> Output the value at the pointer position in the array
+        \n
+        <b>,</b> Accept an input character, and store it at the pointer position in the array
+        \n
+        <b>[</b> If the value at the pointer position in the array is zero, then move the pointer
+        forward to the position after the matching ] command
+        \n
+        <b>]</b> If the value at the pointer position in the array is nonzero, then move the pointer
+        to the matching ] command
+
+        \n\n
+        This app also includes a 9th character
+        \n
+        <b>\\</b> The backslash is used to pause the program, allowing it to be debugged
+
+    </string>
 
 
 </resources>

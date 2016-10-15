@@ -69,6 +69,8 @@
 
 
 
+
+
     <TableLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -91,7 +93,7 @@
                 android:id="@+id/decrement_button"
                 android:layout_column="0"
                 android:onClick="editButtonPress"
-                android:layout_weight="1"/>
+                />
             <Button
                 style="?android:attr/buttonStyleSmall"
                 android:text="@string/increment"
@@ -128,12 +130,7 @@
                 android:id="@+id/start_loop_button"
                 android:layout_column="6"
                 android:onClick="editButtonPress"/>
-            <Button
-                style="?android:attr/buttonStyleSmall"
-                android:text="@string/end_loop"
-                android:id="@+id/end_loop_button"
-                android:layout_column="7"
-                android:onClick="editButtonPress"/>
+
 
         </TableRow>
 
@@ -141,51 +138,46 @@
             android:layout_width="0dp">
             <Button
                 style="?android:attr/buttonStyleSmall"
+                android:text="@string/end_loop"
+                android:id="@+id/end_loop_button"
+                android:layout_column="0"
+                android:onClick="editButtonPress"/>
+            <Button
+                style="?android:attr/buttonStyleSmall"
                 android:text="@string/space"
                 android:id="@+id/space_button"
-                android:layout_column="0"
+                android:layout_column="1"
                 android:onClick="editButtonPress"/>
             <Button
                 style="?android:attr/buttonStyleSmall"
                 android:text="@string/backspace"
                 android:id="@+id/backspace_button"
-                android:layout_column="1"
+                android:layout_column="2"
                 android:onClick="editButtonPress"/>
             <Button
                 style="?android:attr/buttonStyleSmall"
                 android:text="@string/back"
                 android:id="@+id/backward_button"
-                android:layout_column="2"
+                android:layout_column="3"
                 android:onClick="editButtonPress"/>
             <Button
                 style="?android:attr/buttonStyleSmall"
                 android:text="@string/forward"
                 android:id="@+id/forward_button"
-                android:layout_column="3"
-                android:onClick="editButtonPress"/>
-            <Button
-                style="?android:attr/buttonStyleSmall"
-                android:text="@string/up"
-                android:id="@+id/up_button"
                 android:layout_column="4"
                 android:onClick="editButtonPress"/>
-            <Button
-                style="?android:attr/buttonStyleSmall"
-                android:text="@string/down"
-                android:id="@+id/down_button"
-                android:layout_column="5"
-                android:onClick="editButtonPress"/>
+
             <Button
                 style="?android:attr/buttonStyleSmall"
                 android:text="@string/enter"
                 android:id="@+id/enter_button"
-                android:layout_column="6"
+                android:layout_column="5"
                 android:onClick="editButtonPress"/>
             <Button
                 style="?android:attr/buttonStyleSmall"
                 android:text="@string/breakpoint"
                 android:id="@+id/breakpoint_button"
-                android:layout_column="7"
+                android:layout_column="6"
                 android:onClick="editButtonPress"/>
 
         </TableRow>

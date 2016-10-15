@@ -114,7 +114,8 @@ public class Editor extends AppCompatActivity implements SettingsDialog.Settings
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if(item.getItemId() == android.R.id.home) {
-            if(!program.prog.equals(mEditor.getText().toString()) || program.id == 0) {
+            if((!program.prog.equals(mEditor.getText().toString()) || program.id == 0) &&
+                    !mEditor.getText().toString().isEmpty()) {
                 final AlertDialog.Builder builder = new AlertDialog.Builder(this);
                 builder.setTitle("Confirm");
                 builder.setMessage("Save before closing?");
@@ -195,7 +196,7 @@ public class Editor extends AppCompatActivity implements SettingsDialog.Settings
                 mEditor.dispatchKeyEvent(new KeyEvent(0,0, KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_PERIOD, 0));
                 mEditor.dispatchKeyEvent(new KeyEvent(0, 0, KeyEvent.ACTION_UP, KeyEvent.KEYCODE_PERIOD, 0));
                 break;
-            case R.id.input:
+            case R.id.input_button:
                 mEditor.dispatchKeyEvent(new KeyEvent(0,0, KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_COMMA, 0));
                 mEditor.dispatchKeyEvent(new KeyEvent(0, 0, KeyEvent.ACTION_UP, KeyEvent.KEYCODE_COMMA, 0));
                 break;
@@ -226,14 +227,6 @@ public class Editor extends AppCompatActivity implements SettingsDialog.Settings
             case R.id.forward_button:
                 mEditor.dispatchKeyEvent(new KeyEvent(0,0, KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_DPAD_RIGHT, 0));
                 mEditor.dispatchKeyEvent(new KeyEvent(0, 0, KeyEvent.ACTION_UP, KeyEvent.KEYCODE_DPAD_RIGHT, 0));
-                break;
-            case R.id.up_button:
-                mEditor.dispatchKeyEvent(new KeyEvent(0,0, KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_DPAD_UP, 0));
-                mEditor.dispatchKeyEvent(new KeyEvent(0, 0, KeyEvent.ACTION_UP, KeyEvent.KEYCODE_DPAD_UP, 0));
-                break;
-            case R.id.down_button:
-                mEditor.dispatchKeyEvent(new KeyEvent(0,0, KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_DPAD_DOWN, 0));
-                mEditor.dispatchKeyEvent(new KeyEvent(0, 0, KeyEvent.ACTION_UP, KeyEvent.KEYCODE_DPAD_DOWN, 0));
                 break;
             case R.id.enter_button:
                 mEditor.dispatchKeyEvent(new KeyEvent(0,0, KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_ENTER, 0));

@@ -42,7 +42,7 @@ public class Runner extends AppCompatActivity implements InterpreterIO {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.runner);
         mOutput = (TextView) findViewById(R.id.output);
-        mInput = (EditText) findViewById(R.id.input);
+        mInput = (EditText) findViewById(R.id.input_edittext);
         mPlayPauseButton = (ImageButton) findViewById(R.id.play_pause_button);
         mPlayPauseLabel = (TextView) findViewById(R.id.play_pause_label);
         mBreakpointLabel = (TextView) findViewById(R.id.breakpoint_label);

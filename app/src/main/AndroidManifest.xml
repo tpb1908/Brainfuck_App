@@ -19,7 +19,8 @@
             </intent-filter>
         </activity>
         <activity android:name=".Editor"
-                  android:windowSoftInputMode="stateHidden">
+                  android:windowSoftInputMode="stateHidden"
+                  android:configChanges="orientation|keyboardHidden|screenSize">>
 
         </activity>
         <activity android:name=".Runner"
