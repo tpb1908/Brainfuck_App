@@ -152,7 +152,7 @@ public class Runner extends AppCompatActivity implements InterpreterIO {
     }
 
     @Override
-    public void output(final char out) {
+    public void output(final String out) {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -230,7 +230,7 @@ public class Runner extends AppCompatActivity implements InterpreterIO {
         private boolean waitingForInput = false;
         private boolean paused = false;
 
-        public Interpreter(InterpreterIO io, Program program) {
+        Interpreter(InterpreterIO io, Program program) {
             this.io = io;
             this.program = program;
         }
@@ -259,7 +259,7 @@ public class Runner extends AppCompatActivity implements InterpreterIO {
                     }
                 }
             }
-
+            io.output("\nProgram complete");
         }
 
         private void step() {
@@ -317,7 +317,7 @@ public class Runner extends AppCompatActivity implements InterpreterIO {
                     }
                     break;
                 case '.':
-                    io.output((char)mem[pointer]);
+                    io.output( Character.toString((char)mem[pointer]));
                     break;
                 case ',':
                     waitingForInput = true;
@@ -344,18 +344,18 @@ public class Runner extends AppCompatActivity implements InterpreterIO {
             pos++;
         }
 
-        public void setInput(char in) {
+        void setInput(char in) {
             if(waitingForInput) {
                 mem[pointer] = in;
                 waitingForInput = false;
             }
         }
 
-        public void pause() {
+        void pause() {
             paused = true;
         }
 
-        public void unPause() {
+        void unPause() {
             paused = false;
         }
 
@@ -398,7 +398,7 @@ public class Runner extends AppCompatActivity implements InterpreterIO {
             }
         }
 
-        public SpannableString getDebugDump() {
+        SpannableString getDebugDump() {
             final StringBuilder builder = new StringBuilder();
             builder.append("\n\nDebug dump:\n\n");
             builder.append(program.debugDump());

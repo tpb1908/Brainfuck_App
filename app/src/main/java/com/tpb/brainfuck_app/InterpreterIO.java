@@ -4,7 +4,7 @@ package com.tpb.brainfuck_app;
  */
 public interface InterpreterIO {
 
-    void output(char out);
+    void output(String out);
 
     void getInput();
 
