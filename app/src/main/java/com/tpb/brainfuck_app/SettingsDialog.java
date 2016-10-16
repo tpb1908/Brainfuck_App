@@ -59,7 +59,7 @@ public class SettingsDialog extends DialogFragment {
         final RadioGroup mValueOverflowGroup = (RadioGroup) view.findViewById(R.id.value_overflow_behaviour);
         final RadioGroup mValueUnderflowGroup = (RadioGroup) view.findViewById(R.id.value_underflow_behaviour);
         final Button mOkButton = (Button) view.findViewById(R.id.button_ok);
-        final Button mCancelBUtton = (Button) view.findViewById(R.id.button_cancel);
+        final Button mCancelButton = (Button) view.findViewById(R.id.button_cancel);
 
         mLaunchType = (SettingsLaunchType) getArguments().getSerializable("launchType");
         if(mLaunchType == SettingsLaunchType.RUN) {
@@ -212,7 +212,7 @@ public class SettingsDialog extends DialogFragment {
                 }
             }
         });
-        mCancelBUtton.setOnClickListener(new View.OnClickListener() {
+        mCancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 mListener.onNegativeClick(SettingsDialog.this, mLaunchType);

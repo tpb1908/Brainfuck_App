@@ -210,7 +210,7 @@ class Storage extends SQLiteOpenHelper {
                 null);
         if(cursor != null) {
             cursor.moveToFirst();
-            prog.id = cursor.getInt(0);
+            prog.id = cursor.getLong(0);
             prog.name = cursor.getString(1);
             prog.desc = cursor.getString(2);
             prog.prog = cursor.getString(3);
@@ -236,7 +236,7 @@ class Storage extends SQLiteOpenHelper {
         if(cursor.moveToFirst()) {
             do {
                 final Program p = new Program();
-                p.id = cursor.getInt(0);
+                p.id = cursor.getLong(0);
                 p.name = cursor.getString(1);
                 p.desc = cursor.getString(2);
                 p.prog = cursor.getString(3);
