@@ -21,6 +21,10 @@
     <string name="enter">↩</string>
     <string name="breakpoint">\\</string>
 
+    <string name="yes">Y</string>
+    <string name="no">No</string>
+    <string name="cancel">Cancel</string>
+
     <string name="title_editor">Editor</string>
     <string name="title_editing">Editing %1$s</string>
     <string name="title_runner">Runner</string>

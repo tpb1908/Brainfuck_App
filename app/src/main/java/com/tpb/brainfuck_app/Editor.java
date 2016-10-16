@@ -138,20 +138,20 @@ public class Editor extends AppCompatActivity implements SettingsDialog.Settings
                 final AlertDialog.Builder builder = new AlertDialog.Builder(this);
                 builder.setTitle(R.string.title_exit_dialog);
                 builder.setMessage(R.string.message_exit_dialog);
-                builder.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                builder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         showDialog(SettingsDialog.SettingsLaunchType.CLOSE);
                     }
                 });
-                builder.setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                builder.setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         dialogInterface.dismiss();
                         finish();
                     }
                 });
-                builder.setNeutralButton(android.R.string.cancel, null);
+                builder.setNeutralButton(R.string.cancel, null);
                 builder.create().show();
             } else {
                 finish();
