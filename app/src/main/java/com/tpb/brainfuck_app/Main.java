@@ -182,7 +182,6 @@ public class Main extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         mAdapter.getData();
-        Log.i(TAG, "onResume: ");
     }
 
     @Override

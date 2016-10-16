@@ -63,11 +63,11 @@ public class SettingsDialog extends DialogFragment {
 
         mLaunchType = (SettingsLaunchType) getArguments().getSerializable("launchType");
         if(mLaunchType == SettingsLaunchType.RUN) {
-            mTitle.setText("Run");
-            mOkButton.setText("Run");
+            mTitle.setText(R.string.title_settings_run_dialog);
+            mOkButton.setText(R.string.title_settings_run_dialog);
         } else {
-            mTitle.setText("Save");
-            mOkButton.setText("Save");
+            mTitle.setText(R.string.title_settings_save_dialog);
+            mOkButton.setText(R.string.title_settings_save_dialog);
         }
 
         mProgram = getArguments().getParcelable("prog");
@@ -163,22 +163,22 @@ public class SettingsDialog extends DialogFragment {
                 boolean error = false;
                 if(mNameInput.getText().toString().isEmpty()) {
                     error = true;
-                    mNameWrapper.setError("Enter a name for the program");
+                    mNameWrapper.setError(getResources().getString(R.string.error_no_program_name));
                 } else {
                     mNameInput.setError(null);
                 }
                 int size = 10000;
                 if(!mSizeInput.getText().toString().isEmpty()) {
                     size = Integer.parseInt(mSizeInput.getText().toString());
-                    if(size < 8) {
+                    if(size < 1) {
                         error = true;
-                        mSizeInput.setError("Memory size must be at least 8");
+                        mSizeInput.setError(getResources().getString(R.string.error_min_memory_size));
                     } else {
                         mSizeInput.setError(null);
                     }
                     if(size > 100000) {
                         error = true;
-                        mSizeInput.setError("Memory size must be less than 100000");
+                        mSizeInput.setError(getResources().getString(R.string.error_max_memory_size));
                     } else {
                         mSizeInput.setError(null);
                     }
@@ -193,8 +193,8 @@ public class SettingsDialog extends DialogFragment {
                 }
                 if(defaultMin > defaultMax) {
                     error = true;
-                    mMaxWrapper.setError("Max value must larger than min");
-                    mMinWrapper.setError("Min value must be less than max");
+                    mMaxWrapper.setError(getResources().getString(R.string.error_max_min));
+                    mMinWrapper.setError(getResources().getString(R.string.error_min_max));
                 } else {
                     mMaxWrapper.setError(null);
                     mMinWrapper.setError(null);

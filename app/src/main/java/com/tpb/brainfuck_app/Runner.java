@@ -8,6 +8,7 @@ import android.text.Editable;
 import android.text.SpannableString;
 import android.text.TextWatcher;
 import android.text.style.ForegroundColorSpan;
+import android.util.SparseIntArray;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -16,7 +17,6 @@ import android.widget.ImageButton;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
-import java.util.ArrayList;
 import java.util.Stack;
 
 /**
@@ -47,9 +47,9 @@ public class Runner extends AppCompatActivity implements InterpreterIO {
         mBreakpointLabel = (TextView) findViewById(R.id.breakpoint_label);
         program = getIntent().getParcelableExtra("prog");
         if(program.name != null && program.name.length() > 0) {
-            setTitle(program.name);
+            setTitle(String.format(getResources().getString(R.string.title_running), program.name));
         } else {
-            setTitle("Runner");
+            setTitle(R.string.title_runner);
         }
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
@@ -81,13 +81,13 @@ public class Runner extends AppCompatActivity implements InterpreterIO {
 
     private void setPaused() {
         mPlayPauseButton.setImageDrawable(getApplicationContext().getResources().getDrawable(R.drawable.ic_play_arrow_white));
-        mPlayPauseLabel.setText("Play");
+        mPlayPauseLabel.setText(R.string.label_play_button);
         paused = true;
     }
 
     private void setPlaying() {
         mPlayPauseButton.setImageDrawable(getApplicationContext().getResources().getDrawable(R.drawable.ic_pause_white));
-        mPlayPauseLabel.setText("Pause");
+        mPlayPauseLabel.setText(R.string.label_pause_button);
         paused = false;
     }
 
@@ -129,10 +129,10 @@ public class Runner extends AppCompatActivity implements InterpreterIO {
     public void toggleBreak(View v) {
         if(shouldReadBreakpoints) {
             shouldReadBreakpoints = false;
-            mBreakpointLabel.setText("Ignore");
+            mBreakpointLabel.setText(R.string.label_breakpoint_ignore_button);
         } else {
             shouldReadBreakpoints = true;
-            mBreakpointLabel.setText("Break");
+            mBreakpointLabel.setText(R.string.label_breakpoint_break_button);
         }
     }
 
@@ -224,9 +224,9 @@ public class Runner extends AppCompatActivity implements InterpreterIO {
         private int[] mem;
         private int pos;
         private int pointer;
-        private ArrayList<Loop> loops;
         private boolean waitingForInput = false;
         private boolean paused = false;
+        private SparseIntArray loopPositions;
 
         Interpreter(InterpreterIO io, Program program) {
             this.io = io;
@@ -250,8 +250,7 @@ public class Runner extends AppCompatActivity implements InterpreterIO {
                     if(paused || waitingForInput) {
                         try {
                             Thread.sleep(100);
-                        } catch(InterruptedException e) {
-                        }
+                        } catch(InterruptedException e) {}
                     } else {
                         step();
                     }
@@ -324,12 +323,12 @@ public class Runner extends AppCompatActivity implements InterpreterIO {
                 case '[':
                     if(mem[pointer] == 0) {
                         //Jump to matching ]
-                        pos = closingPos(pos);
+                        pos = loopPositions.get(pos);
                     }
                     break;
                 case ']':
                     if(mem[pointer] != 0) {
-                        pos = openingPos(pos);
+                        pos = loopPositions.get(pos);
                     }
                     break;
                 case '\\':
@@ -357,42 +356,16 @@ public class Runner extends AppCompatActivity implements InterpreterIO {
             paused = false;
         }
 
-
-        //TODO- Refactor the logic for loops
-
-        private int closingPos(int start) {
-            for(Loop l : loops) {
-                if(l.s == start) return l.e;
-            }
-            return -1;
-        }
-
-        private int openingPos(int end) {
-            for(Loop l : loops) {
-                if(l.e == end) return l.s;
-            }
-            return -1;
-        }
-
         private void findLoopPositions() {
+            loopPositions = new SparseIntArray();
             final Stack<Integer> openings = new Stack<>();
-            loops = new ArrayList<>();
             for(int i = 0; i < program.prog.length(); i++) {
                 if(program.prog.charAt(i) == '[') {
                     openings.push(i);
                 } else if(program.prog.charAt(i) == ']') {
-                    loops.add(new Loop(openings.pop(), i));
+                    loopPositions.put(openings.peek(), i);
+                    loopPositions.put(i, openings.pop());
                 }
-            }
-        }
-
-        private class Loop {
-            int s;
-            int e;
-
-            Loop(int s, int e) {
-                this.s = s;
-                this.e = e;
             }
         }
 

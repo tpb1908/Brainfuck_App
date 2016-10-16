@@ -11,7 +11,7 @@ import java.util.ArrayList;
 /**
  * Created by theo on 21/08/16.
  */
-public class Storage extends SQLiteOpenHelper {
+class Storage extends SQLiteOpenHelper {
     private static Storage instance;
     private static final String TAG = "Storage";
     private static long lastUpdate;
@@ -34,7 +34,7 @@ public class Storage extends SQLiteOpenHelper {
     private static final String[] PROGRAM_COLUMNS = { KEY_ID, KEY_NAME, KEY_DESC, KEY_PROG, KEY_MEM_SIZE, KEY_MIN_VALUE, KEY_MAX_VALUE, KEY_VALUE_OVERFLOW_BEHAVIOUR, KEY_VALUE_UNDERFLOW_BEHAVIOUR, KEY_POINTER_OVERFLOW_BEHAVIOUR, KEY_POINTER_UNDERFLOW_BEHAVIOUR, KEY_OUTPUT_SUFFIX };
 
 
-    public static synchronized Storage instance(Context context) {
+    static synchronized Storage instance(Context context) {
         if(instance == null) {
             instance = new Storage(context);
             lastUpdate = System.nanoTime();
@@ -72,7 +72,7 @@ public class Storage extends SQLiteOpenHelper {
 
     }
 
-    public void restoreDefaultPrograms() {
+    void restoreDefaultPrograms() {
         final Program p = new Program();
         p.name = "Hello word";
         p.desc = "Outputs 'Hello world'";
@@ -165,7 +165,7 @@ public class Storage extends SQLiteOpenHelper {
         lastUpdate = System.nanoTime();
     }
 
-    public void update(Program program) {
+    void update(Program program) {
         final SQLiteDatabase db = this.getWritableDatabase();
         final ContentValues values = new ContentValues();
         values.put(KEY_NAME, program.name);
@@ -187,7 +187,7 @@ public class Storage extends SQLiteOpenHelper {
         lastUpdate = System.nanoTime();
     }
 
-    public void remove(Program program) {
+    void remove(Program program) {
         final SQLiteDatabase db = this.getReadableDatabase();
         db.delete(TABLE_PROGRAMS,
                 KEY_ID + " = " + program.id,
@@ -228,7 +228,7 @@ public class Storage extends SQLiteOpenHelper {
         return prog;
     }
 
-    public ArrayList<Program> getAll() {
+    ArrayList<Program> getAll() {
         final SQLiteDatabase db = this.getReadableDatabase();
         final ArrayList<Program> programs = new ArrayList<>();
         final String QUERY = "SELECT * FROM " + TABLE_PROGRAMS;
@@ -255,9 +255,8 @@ public class Storage extends SQLiteOpenHelper {
         return programs;
     }
 
-    public boolean updatePerformed(long dataTime) {
+    boolean updatePerformed(long dataTime) {
         return lastUpdate > dataTime;
     }
-
 
 }

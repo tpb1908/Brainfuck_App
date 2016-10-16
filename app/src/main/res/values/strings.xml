@@ -21,7 +21,26 @@
     <string name="enter">↩</string>
     <string name="breakpoint">\\</string>
 
+    <string name="title_editor">Editor</string>
+    <string name="title_editing">Editing %1$s</string>
+    <string name="title_runner">Runner</string>
+    <string name="title_running">Running %1$s</string>
+    <string name="title_exit_dialog">Confirm</string>
+    <string name="title_settings_run_dialog">Run</string>
+    <string name="title_settings_save_dialog">Save</string>
 
+    <string name="message_exit_dialog">Save before closing?</string>
+
+    <string name="label_play_button">Play</string>
+    <string name="label_pause_button">Pause</string>
+    <string name="label_breakpoint_ignore_button">Ignore</string>
+    <string name="label_breakpoint_break_button">Break</string>
+
+    <string name="error_no_program_name">Enter a name for the program</string>
+    <string name="error_min_memory_size">Memory size must be at least 1</string>
+    <string name="error_max_memory_size">Memory size must be less than 100000</string>
+    <string name="error_max_min">Max value must be larger than min</string>
+    <string name="error_min_max">Min value must be smaller than max</string>
 
     <string name="program_name_hint">Program name</string>
     <string name="program_description_hint">Program description</string>
@@ -39,9 +58,9 @@
 
     <string name="program_pointer_over_error_hint">Error on pointer overflow</string>
     <string name="program_pointer_over_wrap_hint">Wrap pointer on overflow</string>
-    <string name="program_pointer_over_expand_hint">Expand memory on overflow</string>
+    <string name="program_pointer_over_expand_hint">Expand on pointer overflow</string>
     <string name="program_pointer_under_error_hint">Error on pointer underflow</string>
-    <string name="program_pointer_under_wrap_hint">Wrap counter on memory underflow</string>
+    <string name="program_pointer_under_wrap_hint">Wrap pointer on underflow</string>
 
     <string name="help_text">
         <b>Brainfuck is a language consisting of only 8 characters</b>

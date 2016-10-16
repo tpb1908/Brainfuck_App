@@ -47,13 +47,13 @@ public class Editor extends AppCompatActivity implements SettingsDialog.Settings
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
         program = new Program();
-        setTitle("Editor");
+        setTitle(R.string.title_editor);
         final Bundle b = getIntent().getExtras();
         if(b != null) {
             program = b.getParcelable("prog");
             if(program != null) {
                 mEditor.setText(program.prog);
-                setTitle("Editing " + program.name);
+                setTitle(String.format(getResources().getString(R.string.title_editing), program.name));
             }
         }
 
@@ -136,22 +136,22 @@ public class Editor extends AppCompatActivity implements SettingsDialog.Settings
         if(item.getItemId() == android.R.id.home) {
             if(editedWithoutSaving) {
                 final AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                builder.setTitle("Confirm");
-                builder.setMessage("Save before closing?");
-                builder.setPositiveButton("YES", new DialogInterface.OnClickListener() {
+                builder.setTitle(R.string.title_exit_dialog);
+                builder.setMessage(R.string.message_exit_dialog);
+                builder.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         showDialog(SettingsDialog.SettingsLaunchType.CLOSE);
                     }
                 });
-                builder.setNegativeButton("NO", new DialogInterface.OnClickListener() {
+                builder.setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         dialogInterface.dismiss();
                         finish();
                     }
                 });
-                builder.setNeutralButton("CANCEL", null);
+                builder.setNeutralButton(android.R.string.cancel, null);
                 builder.create().show();
             } else {
                 finish();

@@ -6,7 +6,7 @@ import android.os.Parcelable;
 /**
  * Created by theo on 23/08/16.
  */
-public class Program implements Parcelable {
+class Program implements Parcelable {
     long id;
     String name = "";
     String desc = "";
@@ -21,9 +21,9 @@ public class Program implements Parcelable {
     int pointerOverflowBehaviour = 0; //On memory overflow, error, wrap, expand
     int pointerUnderflowBehaviour = 0;
 
-    public Program() {}
+    Program() {}
 
-    protected Program(Parcel in) {
+    private Program(Parcel in) {
         id = in.readLong();
         name = in.readString();
         desc = in.readString();
@@ -72,7 +72,7 @@ public class Program implements Parcelable {
         }
     };
 
-    public String debugDump() {
+    String debugDump() {
         String debug = "Program:" +
                 "\n-Name: " + name +
                 "\n-Description: " + desc +
