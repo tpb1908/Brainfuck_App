@@ -8,7 +8,6 @@ import android.text.Editable;
 import android.text.SpannableString;
 import android.text.TextWatcher;
 import android.text.style.ForegroundColorSpan;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -47,7 +46,6 @@ public class Runner extends AppCompatActivity implements InterpreterIO {
         mPlayPauseLabel = (TextView) findViewById(R.id.play_pause_label);
         mBreakpointLabel = (TextView) findViewById(R.id.breakpoint_label);
         program = getIntent().getParcelableExtra("prog");
-        Log.i(TAG, "onCreate: " + program);
         if(program.name != null && program.name.length() > 0) {
             setTitle(program.name);
         } else {
@@ -317,7 +315,7 @@ public class Runner extends AppCompatActivity implements InterpreterIO {
                     }
                     break;
                 case '.':
-                    io.output( Character.toString((char)mem[pointer]));
+                    io.output( Character.toString((char) mem[pointer]));
                     break;
                 case ',':
                     waitingForInput = true;

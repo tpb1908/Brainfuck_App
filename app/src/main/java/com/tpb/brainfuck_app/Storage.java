@@ -5,7 +5,6 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.util.Log;
 
 import java.util.ArrayList;
 
@@ -162,6 +161,7 @@ public class Storage extends SQLiteOpenHelper {
         values.put(KEY_POINTER_UNDERFLOW_BEHAVIOUR, program.pointerUnderflowBehaviour);
         values.put(KEY_OUTPUT_SUFFIX, program.outputSuffix);
         program.id = db.insert(TABLE_PROGRAMS, null, values);
+        db.close();
         lastUpdate = System.nanoTime();
     }
 
@@ -183,6 +183,7 @@ public class Storage extends SQLiteOpenHelper {
                 values,
                 KEY_ID + " = " + program.id,
                 null);
+        db.close();
         lastUpdate = System.nanoTime();
     }
 
@@ -192,9 +193,10 @@ public class Storage extends SQLiteOpenHelper {
                 KEY_ID + " = " + program.id,
                 null);
         lastUpdate = System.nanoTime();
+        db.close();
     }
 
-    public Program get(int id) {
+    public Program get(long id) {
         final Program prog = new Program();
         prog.id = id;
         final SQLiteDatabase db = this.getReadableDatabase();
@@ -222,7 +224,7 @@ public class Storage extends SQLiteOpenHelper {
             prog.outputSuffix = cursor.getString(11);
             cursor.close();
         }
-
+        db.close();
         return prog;
     }
 
@@ -246,7 +248,6 @@ public class Storage extends SQLiteOpenHelper {
                 p.pointerOverflowBehaviour = cursor.getInt(9);
                 p.pointerUnderflowBehaviour = cursor.getInt(10);
                 p.outputSuffix = cursor.getString(11);
-                Log.i(TAG, "getAll: " + p);
                 programs.add(p);
             } while(cursor.moveToNext());
         }
@@ -255,7 +256,6 @@ public class Storage extends SQLiteOpenHelper {
     }
 
     public boolean updatePerformed(long dataTime) {
-        Log.i(TAG, "updatePerformed: DataTime " + dataTime + " LastUpdate " + lastUpdate);
         return lastUpdate > dataTime;
     }
 

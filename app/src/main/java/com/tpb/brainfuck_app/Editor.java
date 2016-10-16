@@ -26,9 +26,6 @@ public class Editor extends AppCompatActivity implements SettingsDialog.Settings
     private boolean isKeyboardLocked = false;
     private EditText mEditor;
     private ImageButton mKeyboardLock;
-    private ImageButton mRun;
-    private ImageButton mQuickRun;
-    private ImageButton mSaveButton;
     private Program program;
     private Storage storage;
     private boolean editedWithoutSaving = false;
@@ -42,9 +39,9 @@ public class Editor extends AppCompatActivity implements SettingsDialog.Settings
         storage = Storage.instance(this);
         mEditor = (EditText) findViewById(R.id.editor);
         mKeyboardLock = (ImageButton) findViewById(R.id.lock_keyboard_button);
-        mRun = (ImageButton) findViewById(R.id.run_button);
-        mQuickRun = (ImageButton) findViewById(R.id.quick_run_button);
-        mSaveButton = (ImageButton) findViewById(R.id.save_button);
+        final ImageButton mRun = (ImageButton) findViewById(R.id.run_button);
+        final ImageButton mQuickRun = (ImageButton) findViewById(R.id.quick_run_button);
+        final ImageButton mSaveButton = (ImageButton) findViewById(R.id.save_button);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
@@ -92,7 +89,7 @@ public class Editor extends AppCompatActivity implements SettingsDialog.Settings
         mKeyboardLock.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                isKeyboardLocked = ! isKeyboardLocked;
+                isKeyboardLocked = !isKeyboardLocked;
                 if(isKeyboardLocked) {
                     mKeyboardLock.setImageDrawable(getApplicationContext().getResources().getDrawable(R.drawable.ic_lock_outline_white));
                     final InputMethodManager imm = (InputMethodManager) view.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -185,6 +182,7 @@ public class Editor extends AppCompatActivity implements SettingsDialog.Settings
             i.putExtra("prog", program);
             startActivity(i);
         } else if(lt == SettingsDialog.SettingsLaunchType.SAVE || lt == SettingsDialog.SettingsLaunchType.CLOSE) {
+            program.prog = mEditor.getText().toString();
             if(program.id == 0) {
                 storage.add(program);
             } else {

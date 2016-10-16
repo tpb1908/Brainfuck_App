@@ -8,7 +8,6 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -73,7 +72,6 @@ public class SettingsDialog extends DialogFragment {
 
         mProgram = getArguments().getParcelable("prog");
         if(mProgram != null) {
-            Log.i(TAG, "onCreateDialog: Program is not null");
             if(mProgram.name != null && !mProgram.name.isEmpty()) {
                 mNameInput.setText(mProgram.name);
             }
@@ -172,9 +170,9 @@ public class SettingsDialog extends DialogFragment {
                 int size = 10000;
                 if(!mSizeInput.getText().toString().isEmpty()) {
                     size = Integer.parseInt(mSizeInput.getText().toString());
-                    if(size < 10) {
+                    if(size < 8) {
                         error = true;
-                        mSizeInput.setError("Memory size must be at least 10");
+                        mSizeInput.setError("Memory size must be at least 8");
                     } else {
                         mSizeInput.setError(null);
                     }
@@ -201,7 +199,6 @@ public class SettingsDialog extends DialogFragment {
                     mMaxWrapper.setError(null);
                     mMinWrapper.setError(null);
                 }
-
                 if(!error) {
                     mProgram.name = mNameInput.getText().toString();
                     mProgram.memSize = size;
