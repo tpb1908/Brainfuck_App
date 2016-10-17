@@ -1,5 +1,7 @@
 package com.tpb.brainfuck_app;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -204,6 +206,7 @@ public class Runner extends AppCompatActivity implements InterpreterIO {
 
     @Override
     public void finish() {
+        //TODO- Dismiss keyboard
         thread.interrupt();
         super.finish();
 
@@ -212,10 +215,38 @@ public class Runner extends AppCompatActivity implements InterpreterIO {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if(item.getItemId() == android.R.id.home) {
-            finish();
+            backPress();
             return true;
         }
         return false;
+    }
+
+    @Override
+    public void onBackPressed() {
+        backPress();
+    }
+
+    public void backPress() {
+        if(thread.isAlive()) {
+            final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle(R.string.title_exit_dialog);
+            builder.setMessage(R.string.message_exit_running_program_dialog);
+            builder.setPositiveButton(android.R.string.ok,  new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    finish();
+                }
+            });
+            builder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    dialogInterface.dismiss();
+                }
+            });
+            builder.create().show();
+        } else {
+            finish();
+        }
     }
 
     private class Interpreter implements Runnable {

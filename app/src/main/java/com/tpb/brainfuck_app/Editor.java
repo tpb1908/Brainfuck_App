@@ -134,30 +134,40 @@ public class Editor extends AppCompatActivity implements SettingsDialog.Settings
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if(item.getItemId() == android.R.id.home) {
-            if(editedWithoutSaving) {
-                final AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                builder.setTitle(R.string.title_exit_dialog);
-                builder.setMessage(R.string.message_exit_dialog);
-                builder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        showDialog(SettingsDialog.SettingsLaunchType.CLOSE);
-                    }
-                });
-                builder.setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        dialogInterface.dismiss();
-                        finish();
-                    }
-                });
-                builder.setNeutralButton(R.string.cancel, null);
-                builder.create().show();
-            } else {
-                finish();
-            }
+            backPress();
+            return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onBackPressed() {
+        backPress();
+    }
+
+    private void backPress() {
+        if(editedWithoutSaving) {
+            final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle(R.string.title_exit_dialog);
+            builder.setMessage(R.string.message_save_exit_dialog);
+            builder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    showDialog(SettingsDialog.SettingsLaunchType.CLOSE);
+                }
+            });
+            builder.setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    dialogInterface.dismiss();
+                    finish();
+                }
+            });
+            builder.setNeutralButton(R.string.cancel, null);
+            builder.create().show();
+        } else {
+            finish();
+        }
     }
 
     private void showDialog(SettingsDialog.SettingsLaunchType lt) {
