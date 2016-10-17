@@ -1,6 +1,7 @@
 package com.tpb.brainfuck_app;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -206,7 +207,8 @@ public class Runner extends AppCompatActivity implements InterpreterIO {
 
     @Override
     public void finish() {
-        //TODO- Dismiss keyboard
+        ((InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE)).
+                hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
         thread.interrupt();
         super.finish();
 
