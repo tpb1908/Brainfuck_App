@@ -91,11 +91,11 @@ public class Editor extends AppCompatActivity implements SettingsDialog.Settings
             public void onClick(View view) {
                 isKeyboardLocked = !isKeyboardLocked;
                 if(isKeyboardLocked) {
-                    mKeyboardLock.setImageDrawable(getApplicationContext().getResources().getDrawable(R.drawable.ic_lock_outline_white));
+                    mKeyboardLock.setImageResource(R.drawable.ic_lock_outline_white);
                     final InputMethodManager imm = (InputMethodManager) view.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
                     if(imm != null) imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
                 } else {
-                    mKeyboardLock.setImageDrawable(getApplicationContext().getResources().getDrawable(R.drawable.ic_lock_open_white));
+                    mKeyboardLock.setImageResource(R.drawable.ic_lock_open_white);
                 }
             }
         });
